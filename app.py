@@ -33,28 +33,11 @@ db_config = {
 
 
 # # OAuth configuration
-# oauth = OAuth(app)
-# google = oauth.register(
-#     name='google',
-#     client_id=os.getenv('GOOGLE_CLIENT_ID', '39257771502-vsoftekttnf9ga7l8i49oohlse57b29q.apps.googleusercontent.com'),
-#     client_secret=os.getenv('GOOGLE_CLIENT_SECRET', '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'),
-#     authorize_url='https://accounts.google.com/o/oauth2/auth',
-#     authorize_params=None,
-#     access_token_url='https://oauth2.googleapis.com/token',
-#     access_token_params=None,
-#     refresh_token_url=None,
-#     refresh_token_params=None,
-#     redirect_uri='http://127.0.0.1:5000/authorize',
-#     client_kwargs={'scope': 'openid email profile'},
-#     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
-# )
-
-
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='39257771502-vsoftekttnf9ga7l8i49oohlse57b29q.apps.googleusercontent.com',
-    client_secret='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',
+    client_id=os.getenv('GOOGLE_CLIENT_ID', '39257771502-vsoftekttnf9ga7l8i49oohlse57b29q.apps.googleusercontent.com'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET', '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'),
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params=None,
     access_token_url='https://oauth2.googleapis.com/token',
@@ -65,6 +48,23 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'},
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
 )
+
+
+# oauth = OAuth(app)
+# google = oauth.register(
+#     name='google',
+#     client_id='39257771502-vsoftekttnf9ga7l8i49oohlse57b29q.apps.googleusercontent.com',
+#     client_secret='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',
+#     authorize_url='https://accounts.google.com/o/oauth2/auth',
+#     authorize_params=None,
+#     access_token_url='https://oauth2.googleapis.com/token',
+#     access_token_params=None,
+#     refresh_token_url=None,
+#     refresh_token_params=None,
+#     redirect_uri='https://feedback-final-testing.onrender.com/authorize',  # Updated redirect URI
+#     client_kwargs={'scope': 'openid email profile'},
+#     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
+# )
 
 
 def get_db_connection():
