@@ -23,10 +23,10 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f
 
 # Database configuration
 db_config = {
-    'dbname': "dhp2024",
-    'user': "postgres",
-    'host':"localhost",
-    'password': "54321",
+    'dbname': "feedback_final_testing",
+    'user': "feedback_final_testing_user",
+    'host':"dpg-crguo8rv2p9s73dtri80-a",
+    'password': "Dur85lbztj1g5LLe1tMQHZqgbAQHftxz",
     'port': "5432"
 }
 
