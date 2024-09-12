@@ -572,6 +572,7 @@ def create_tables_if_not_exists():
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
     (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_id) DO NOTHING;
     """
 
     # SQL to insert courses with conflict resolution
@@ -595,6 +596,7 @@ def create_tables_if_not_exists():
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
     ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (instructor_id) DO NOTHING;
     """
 
     conn = get_db_connection()
