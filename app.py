@@ -541,18 +541,20 @@ def create_tables_if_not_exists():
    # SQL to create the feedback table
     create_feedback_table = """
     CREATE TABLE IF NOT EXISTS feedback (
-        feedback_id SERIAL PRIMARY KEY,
-        course_id INT REFERENCES courses(course_id),
-        coursecode2       VARCHAR(50),
-        studentemaiid     VARCHAR(100),
-        studentname       VARCHAR(100),
-        dateOfFeedback DATE,
-        week INT,
-        instructorEmailID VARCHAR(100),
-        question1Rating INT,
-        question2Rating INT,
-        remarks TEXT
-    );
+    feedback_id SERIAL PRIMARY KEY,
+    course_id INT REFERENCES courses(course_id),
+    coursecode2 VARCHAR(50),
+    studentemaiid VARCHAR(100),
+    studentname VARCHAR(100),
+    dateOfFeedback DATE,
+    week INT,
+    instructorEmailID VARCHAR(100),
+    question1Rating INT,
+    question2Rating INT,
+    remarks TEXT,
+    CONSTRAINT unique_feedback UNIQUE (course_id, studentemaiid, week)
+);
+
     """
 
     # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
@@ -718,9 +720,15 @@ def submit_all_forms():
         if conn:
             cursor = conn.cursor()
             insert_query = """
-                INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO feedback (course_id, coursecode2, studentemaiid, studentname, dateOfFeedback, week, instructorEmailID, question1Rating, question2Rating, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (course_id, studentemaiid, week) 
+                DO UPDATE SET coursecode2 = EXCLUDED.coursecode2, 
+                              question1Rating = EXCLUDED.question1Rating, 
+                              question2Rating = EXCLUDED.question2Rating, 
+                              remarks = EXCLUDED.remarks
             """
+
             cursor.executemany(insert_query, prepared_feedback_entries)
             conn.commit()
             cursor.close()
