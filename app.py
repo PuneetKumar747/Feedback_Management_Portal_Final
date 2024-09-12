@@ -521,7 +521,7 @@ def create_tables_if_not_exists():
     # SQL to create the instructors table
     create_instructors_table = """
     CREATE TABLE IF NOT EXISTS instructors (
-        instructor_id INT PRIMARY KEY,
+        instructor_id INT UNIQUE PRIMARY KEY,
         instructor_name VARCHAR(255) UNIQUE NOT NULL,
         instructor_email VARCHAR(255) NOT NULL
     );
@@ -532,7 +532,7 @@ def create_tables_if_not_exists():
     CREATE TABLE IF NOT EXISTS courses (
         course_id SERIAL PRIMARY KEY,
         course_name VARCHAR(255),
-        instructor_id INT,
+        instructor_id INT UNIQUE,
         batch_pattern VARCHAR(10)
     );
     """
