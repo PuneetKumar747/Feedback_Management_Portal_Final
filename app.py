@@ -192,6 +192,7 @@ def dashboard():
 
 @app.route('/student_portal')
 def student_portal():
+    create_tables_if_not_exists()
     user_info = session.get('user_info')
     print("Accessing student portal for user:", user_info)
 
@@ -516,6 +517,8 @@ def get_form(course_id):
 
 def create_tables_if_not_exists():
     """Create tables if they do not already exist and insert initial data."""
+    
+    # SQL to create the instructors table
     create_instructors_table = """
     CREATE TABLE IF NOT EXISTS instructors (
         instructor_id SERIAL PRIMARY KEY,
@@ -524,6 +527,7 @@ def create_tables_if_not_exists():
     );
     """
 
+    # SQL to create the courses table
     create_courses_table = """
     CREATE TABLE IF NOT EXISTS courses (
         course_id SERIAL PRIMARY KEY,
@@ -533,6 +537,7 @@ def create_tables_if_not_exists():
     );
     """
 
+    # SQL to create the feedback table
     create_feedback_table = """
     CREATE TABLE IF NOT EXISTS feedback (
         feedback_id SERIAL PRIMARY KEY,
@@ -548,26 +553,27 @@ def create_tables_if_not_exists():
     );
     """
 
+    # Inserting instructor data with pre-defined instructor_id
     insert_instructors_query = """
-    INSERT INTO instructors (instructor_name, instructor_email)
-    VALUES 
-    ('Dr. Achal Agrawal', 'achal@sitare.org'),
-    ('Ms. Preeti Shukla', 'preeti@sitare.org'),
-    ('Dr. Amit Singhal', 'amit@sitare.org'),
-    ('Dr. Pintu Lohar', 'pintu@sitare.org'),
-    ('Dr. Prosenjit', 'prosonjit@sitare.org'),
-    ('Dr. Kushal Shah', 'kpuneet474@gmail.com'),
-    ('Ms. Riya Bangera', 'riya@sitare.org'),
-    ('Mr. Saurabh Pandey', 'saurabh@sitare.org'),
-    ('Dr. Anuja Agrawal', 'anuja@sitare.org'),
-    ('Ms. Geeta', 'geeta@sitare.org'),
-    ('Dr. Mainak', 'mainakc@sitare.org'),
-    ('Jeet Sir', 'jeet.mukherjee@sitare.org'),
-    ('Dr. Ambar Jain', 'ambar@sitare.org'),
-    ('Dr. Shankho Pal', 'shankho@sitare.org')
-    ON CONFLICT (instructor_name) DO NOTHING;
+    INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
+    VALUES
+    (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
+    (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+    (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
+    (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
+    (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
+    (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+    (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
+    (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+    (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
+    (10, 'Ms. Geeta', 'geeta@sitare.org'),
+    (8, 'Dr. Mainak', 'mainakc@sitare.org'),
+    (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
+    (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org');
     """
 
+    # Inserting courses data
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
     VALUES
@@ -587,34 +593,43 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
-    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24');
     """
 
     conn = get_db_connection()
     if conn is None:
+        print("Error: Database connection not established.")
         return
-
+    
     try:
         with conn.cursor() as cursor:
             # Create tables
+            print("Creating instructors table...")
             cursor.execute(create_instructors_table)
+            print("Creating courses table...")
             cursor.execute(create_courses_table)
+            print("Creating feedback table...")
             cursor.execute(create_feedback_table)
             
             # Insert data into instructors and courses tables
+            print("Inserting data into instructors table...")
             cursor.execute(insert_instructors_query)
+            print("Inserting data into courses table...")
             cursor.execute(insert_courses_query)
             
             conn.commit()
+            print("Tables created and data inserted successfully.")
     except psycopg2.Error as e:
         print("Error executing SQL commands:", str(e))
         conn.rollback()
     finally:
         conn.close()
 
+
 # Call create_tables_if_not_exists() to set up the database
+print("Creating tables...")
 create_tables_if_not_exists()
+print("Tables created.")
 
 
 @app.route('/submit_all_forms', methods=['POST'])
@@ -767,6 +782,7 @@ def schedule_emails():
         time.sleep(60)  # wait one minute
 
 if __name__ == '__main__':
+    create_tables_if_not_exists()
     app.run(debug=True)
 
     # threading.Thread(target=schedule_emails, daemon=True).start()
