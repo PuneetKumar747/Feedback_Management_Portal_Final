@@ -337,7 +337,7 @@ def not_saturday():
 def get_feedback_data(instructor_email):
     query = """
         SELECT f.coursecode2, f.DateOfFeedback, f.StudentName, f.Week, f.Question1Rating, f.Question2Rating, f.Remarks, f.studentemaiid, c.course_name
-        FROM feedback f
+        FROM feedback1 f
         JOIN courses c ON f.coursecode2 = CAST(c.course_id AS VARCHAR)
         WHERE f.instructorEmailID = %s AND f.DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
         ORDER BY f.coursecode2, f.Week, f.DateOfFeedback DESC
@@ -470,7 +470,7 @@ def admin_portal():
             cursor = conn.cursor()
             query = """
                 SELECT instructorEmailID, coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks 
-                FROM feedback 
+                FROM feedback1 
                 WHERE instructorEmailID IN %s AND DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
             """
             cursor.execute(query, (tuple(email_ids),))
@@ -540,7 +540,7 @@ def create_tables_if_not_exists():
 
    # SQL to create the feedback table
     create_feedback_table = """
-    CREATE TABLE IF NOT EXISTS feedback (
+    CREATE TABLE IF NOT EXISTS feedback1 (
     feedback_id SERIAL PRIMARY KEY,
     course_id INT REFERENCES courses(course_id),
     coursecode2 VARCHAR(50),
@@ -720,7 +720,7 @@ def submit_all_forms():
         if conn:
             cursor = conn.cursor()
             insert_query = """
-                INSERT INTO feedback (course_id, coursecode2, studentemaiid, studentname, dateOfFeedback, week, instructorEmailID, question1Rating, question2Rating, remarks)
+                INSERT INTO feedback1 (course_id, coursecode2, studentemaiid, studentname, dateOfFeedback, week, instructorEmailID, question1Rating, question2Rating, remarks)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (course_id, studentemaiid, week) 
                 DO UPDATE SET coursecode2 = EXCLUDED.coursecode2, 
