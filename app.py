@@ -534,7 +534,6 @@ def create_tables_if_not_exists():
         course_name VARCHAR(255),
         instructor_id INT,
         batch_pattern VARCHAR(10),
-        # UNIQUE (course_name, instructor_id, batch_pattern)
     );
     """
 
