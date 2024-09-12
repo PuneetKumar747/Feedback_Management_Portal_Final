@@ -23,10 +23,10 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f
 
 # Database configuration
 db_config = {
-    'dbname': "feedback_final_testing",
-    'user': "feedback_final_testing_user",
-    'host':"dpg-crguo8rv2p9s73dtri80-a",
-    'password': "Dur85lbztj1g5LLe1tMQHZqgbAQHftxz",
+    'dbname': "feedbackportal",
+    'user': "su23003",
+    'host':"dpg-crhh7qt6l47c73c8vjc0-a",
+    'password': "BodGhLuRQwZdM9yWHDSk6zmN7bWMoL4N",
     'port': "5432"
 }
 
