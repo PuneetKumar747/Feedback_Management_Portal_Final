@@ -514,6 +514,56 @@ def get_form(course_id):
     print(f"Rendering form for course ID: {course_id}")
     return render_template('course_form.html', course_id=course_id)
 
+# def create_tables_if_not_exists():
+#     create_instructors_table = """
+#     CREATE TABLE IF NOT EXISTS instructors (
+#         instructor_id SERIAL PRIMARY KEY,
+#         instructor_name VARCHAR(255) UNIQUE NOT NULL,
+#         instructor_email VARCHAR(255) NOT NULL
+#     );
+#     """
+
+#     create_courses_table = """
+#     CREATE TABLE IF NOT EXISTS courses (
+#         course_id SERIAL PRIMARY KEY,
+#         course_name VARCHAR(255) NOT NULL,
+#         instructor_id INT REFERENCES instructors(instructor_id),
+#         batch_pattern VARCHAR(255) NOT NULL
+#     );
+#     """
+
+#     create_feedback_table = """
+#     CREATE TABLE IF NOT EXISTS feedback (
+#         feedback_id SERIAL PRIMARY KEY,
+#         course_id INT REFERENCES courses(course_id),
+#         studentEmailID VARCHAR(100),
+#         studentName VARCHAR(100),
+#         dateOfFeedback DATE,
+#         week INT,
+#         instructorEmailID VARCHAR(100),
+#         question1Rating INT,
+#         question2Rating INT,
+#         remarks TEXT
+#     );
+#     """
+    
+#     conn = get_db_connection()
+#     try:
+#         with conn.cursor() as cursor:
+#             # Execute table creation queries
+#             cursor.execute(create_instructors_table)
+#             cursor.execute(create_courses_table)
+#             cursor.execute(create_feedback_table)
+#             conn.commit()
+#             print("Tables created or already exist.")
+#     except psycopg2.Error as e:
+#         print(f"Database error while creating tables: {str(e)}")
+#     finally:
+#         conn.close()
+
+# # Call the function to create tables
+# create_tables_if_not_exists()
+
 def create_tables_if_not_exists():
     create_instructors_table = """
     CREATE TABLE IF NOT EXISTS instructors (
@@ -546,22 +596,70 @@ def create_tables_if_not_exists():
         remarks TEXT
     );
     """
-    
-    conn = get_db_connection()
-    try:
-        with conn.cursor() as cursor:
-            # Execute table creation queries
-            cursor.execute(create_instructors_table)
-            cursor.execute(create_courses_table)
-            cursor.execute(create_feedback_table)
-            conn.commit()
-            print("Tables created or already exist.")
-    except psycopg2.Error as e:
-        print(f"Database error while creating tables: {str(e)}")
-    finally:
-        conn.close()
 
-# Call the function to create tables
+    # Execute table creation
+    conn = get_db_connection()
+    if conn is None:
+        return
+    
+    cursor = conn.cursor()
+    cursor.execute(create_instructors_table)
+    cursor.execute(create_courses_table)
+    cursor.execute(create_feedback_table)
+    conn.commit()
+
+    # Insert data into instructors table
+    insert_instructors_query = """
+    INSERT INTO instructors (instructor_name, instructor_email)
+    VALUES 
+    ('Dr. Achal Agrawal', 'achal@sitare.org'),
+    ('Ms. Preeti Shukla', 'preeti@sitare.org'),
+    ('Dr. Amit Singhal', 'amit@sitare.org'),
+    ('Dr. Pintu Lohar', 'pintu@sitare.org'),
+    ('Dr. Prosenjit', 'prosonjit@sitare.org'),
+    ('Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+    ('Ms. Riya Bangera', 'riya@sitare.org'),
+    ('Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+    ('Dr. Anuja Agrawal', 'anuja@sitare.org'),
+    ('Ms. Geeta', 'geeta@sitare.org'),
+    ('Dr. Mainak', 'mainakc@sitare.org'),
+    ('Jeet Sir', 'jeet.mukherjee@sitare.org'),
+    ('Dr. Ambar Jain', 'ambar@sitare.org'),
+    ('Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_name) DO NOTHING;
+    """
+    cursor.execute(insert_instructors_query)
+
+    # Insert data into courses table
+    insert_courses_query = """
+    INSERT INTO courses (course_name, instructor_id, batch_pattern)
+    VALUES
+    ('Artificial Intelligence', 1, 'su-230'),
+    ('DBMS', 1, 'su-230'),
+    ('ADSA', 2, 'su-230'),
+    ('Probability for CS', 2, 'su-230'),
+    ('Communication and Ethics', 4, 'su-230'),
+    ('Java', 13, 'su-230'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-230'),
+    ('Web Applications Development', 6, 'su-220'),
+    ('OS Principles', 8, 'su-220'),
+    ('Deep Learning', 9, 'su-220'),
+    ('Creative Problem Solving', 10, 'su-220'),
+    ('ITC', 3, 'su-24'),
+    ('Communication and Ethics', 4, 'su-24'),
+    ('Introduction to Computers', 3, 'su-24'),
+    ('Linear Algebra', 12, 'su-24'),
+    ('Programming Methodology in Python', 9, 'su-24'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
+    """
+    cursor.execute(insert_courses_query)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
 
 
