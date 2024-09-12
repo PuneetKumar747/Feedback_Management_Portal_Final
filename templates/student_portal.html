@@ -386,16 +386,12 @@
                     alert("Please complete all required fields for the following courses: " + incompleteForms.join(", "));
                 } else {
                     // If all forms are valid, proceed with form submission
-                    $.post("/submit_all_forms", formsData, function (response) {
+                    $.post("/submit_all_forms", {
+                        ...formsData,
+                        csrf_token: "{{ csrf_token() }}"
+                    }, function (response) {
                         if (response.status === "success") {
                             alert("Your feedback is successfully saved!");
-
-                            // Clear all the forms
-                            $(".form-container form").each(function () {
-                                this.reset();
-                            });
-
-                            // Redirect to the index page after success
                             window.location.href = "/";
                         } else if (response.status === "already_submitted") {
                             $("#feedback-submitted-alert").show();
@@ -406,6 +402,7 @@
                         console.error("Submission error:", xhr.responseText);
                         alert("Error in submitting feedback. Please try again.");
                     });
+
                 }
             });
         });
