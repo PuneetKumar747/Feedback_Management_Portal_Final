@@ -538,13 +538,14 @@ def create_tables_if_not_exists():
     );
     """
 
-    # SQL to create the feedback table
+   # SQL to create the feedback table
     create_feedback_table = """
     CREATE TABLE IF NOT EXISTS feedback (
         feedback_id SERIAL PRIMARY KEY,
         course_id INT REFERENCES courses(course_id),
-        studentEmailID VARCHAR(100),
-        studentName VARCHAR(100),
+        coursecode2       VARCHAR(50),
+        studentemaiid     VARCHAR(100),
+        studentname       VARCHAR(100),
         dateOfFeedback DATE,
         week INT,
         instructorEmailID VARCHAR(100),
