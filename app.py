@@ -718,7 +718,7 @@ def submit_all_forms():
         if conn:
             cursor = conn.cursor()
             insert_query = """
-                INSERT INTO feedback coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+                INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             cursor.executemany(insert_query, prepared_feedback_entries)
@@ -779,9 +779,9 @@ def schedule_emails():
 
 if __name__ == '__main__':
     create_tables_if_not_exists()
-    app.run(debug=True)
+    # app.run(debug=True)
 
-    # threading.Thread(target=schedule_emails, daemon=True).start()
-    # port = int(os.environ.get('PORT', 5000))
-    # app.run(host="0.0.0.0", port=port, debug=True)
+    threading.Thread(target=schedule_emails, daemon=True).start()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
 
