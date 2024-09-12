@@ -590,7 +590,7 @@ def create_tables_if_not_exists():
     ('OS Principles', 8, 'su-220'),
     ('Deep Learning', 9, 'su-220'),
     ('Creative Problem Solving', 10, 'su-220'),
-    ('ITC', 3, 'su-24'),
+
     ('Communication and Ethics', 4, 'su-24'),
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
