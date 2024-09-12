@@ -551,9 +551,7 @@ def create_tables_if_not_exists():
     instructorEmailID VARCHAR(100),
     question1Rating INT,
     question2Rating INT,
-    remarks TEXT,
-    CONSTRAINT unique_feedback UNIQUE (course_id, studentemaiid, week)
-);
+    remarks TEXT);
 
     """
 
@@ -574,8 +572,7 @@ def create_tables_if_not_exists():
     (8, 'Dr. Mainak', 'mainakc@sitare.org'),
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
-    ON CONFLICT (instructor_id) DO NOTHING;
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org');
     """
 
     # SQL to insert courses with conflict resolution
@@ -598,8 +595,7 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
-    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24');
     """
 
     conn = get_db_connection()
@@ -722,11 +718,6 @@ def submit_all_forms():
             insert_query = """
                 INSERT INTO feedback1 (course_id, coursecode2, studentemaiid, studentname, dateOfFeedback, week, instructorEmailID, question1Rating, question2Rating, remarks)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (course_id, studentemaiid, week) 
-                DO UPDATE SET coursecode2 = EXCLUDED.coursecode2, 
-                              question1Rating = EXCLUDED.question1Rating, 
-                              question2Rating = EXCLUDED.question2Rating, 
-                              remarks = EXCLUDED.remarks
             """
 
             cursor.executemany(insert_query, prepared_feedback_entries)
