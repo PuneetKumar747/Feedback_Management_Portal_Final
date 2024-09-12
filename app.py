@@ -304,7 +304,7 @@ def not_saturday():
 
                     query = """
                     SELECT 
-                        CourseCode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
+                        coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
                     FROM 
                         feedback
                     WHERE 
@@ -336,11 +336,11 @@ def not_saturday():
 
 def get_feedback_data(instructor_email):
     query = """
-        SELECT f.CourseCode2, f.DateOfFeedback, f.StudentName, f.Week, f.Question1Rating, f.Question2Rating, f.Remarks, f.studentemaiid, c.course_name
+        SELECT f.coursecode2, f.DateOfFeedback, f.StudentName, f.Week, f.Question1Rating, f.Question2Rating, f.Remarks, f.studentemaiid, c.course_name
         FROM feedback f
-        JOIN courses c ON f.CourseCode2 = CAST(c.course_id AS VARCHAR)
+        JOIN courses c ON f.coursecode2 = CAST(c.course_id AS VARCHAR)
         WHERE f.instructorEmailID = %s AND f.DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
-        ORDER BY f.CourseCode2, f.Week, f.DateOfFeedback DESC
+        ORDER BY f.coursecode2, f.Week, f.DateOfFeedback DESC
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -469,7 +469,7 @@ def admin_portal():
         if conn:
             cursor = conn.cursor()
             query = """
-                SELECT instructorEmailID, CourseCode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks 
+                SELECT instructorEmailID, coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks 
                 FROM feedback 
                 WHERE instructorEmailID IN %s AND DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
             """
@@ -718,7 +718,7 @@ def submit_all_forms():
         if conn:
             cursor = conn.cursor()
             insert_query = """
-                INSERT INTO feedback (CourseCode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+                INSERT INTO feedback coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             cursor.executemany(insert_query, prepared_feedback_entries)
