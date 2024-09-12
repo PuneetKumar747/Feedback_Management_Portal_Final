@@ -531,9 +531,10 @@ def create_tables_if_not_exists():
     create_courses_table = """
     CREATE TABLE IF NOT EXISTS courses (
         course_id SERIAL PRIMARY KEY,
-        course_name VARCHAR(255) NOT NULL,
-        instructor_id INT REFERENCES instructors(instructor_id),
-        batch_pattern VARCHAR(255) NOT NULL
+        course_name VARCHAR(255),
+        instructor_id INT,
+        batch_pattern VARCHAR(10),
+        UNIQUE (course_name, instructor_id, batch_pattern)
     );
     """
 
@@ -553,7 +554,7 @@ def create_tables_if_not_exists():
     );
     """
 
-    # Inserting instructor data with pre-defined instructor_id
+    # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
     insert_instructors_query = """
     INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
     VALUES
@@ -570,10 +571,11 @@ def create_tables_if_not_exists():
     (8, 'Dr. Mainak', 'mainakc@sitare.org'),
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-    (12, 'Dr. Shankho Pal', 'shankho@sitare.org');
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_id) DO NOTHING;
     """
 
-    # Inserting courses data
+    # SQL to insert courses with conflict resolution
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
     VALUES
@@ -593,7 +595,8 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24');
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
 
     conn = get_db_connection()
@@ -604,17 +607,12 @@ def create_tables_if_not_exists():
     try:
         with conn.cursor() as cursor:
             # Create tables
-            print("Creating instructors table...")
             cursor.execute(create_instructors_table)
-            print("Creating courses table...")
             cursor.execute(create_courses_table)
-            print("Creating feedback table...")
             cursor.execute(create_feedback_table)
             
             # Insert data into instructors and courses tables
-            print("Inserting data into instructors table...")
             cursor.execute(insert_instructors_query)
-            print("Inserting data into courses table...")
             cursor.execute(insert_courses_query)
             
             conn.commit()
@@ -625,11 +623,8 @@ def create_tables_if_not_exists():
     finally:
         conn.close()
 
-
 # Call create_tables_if_not_exists() to set up the database
-print("Creating tables...")
 create_tables_if_not_exists()
-print("Tables created.")
 
 
 @app.route('/submit_all_forms', methods=['POST'])
