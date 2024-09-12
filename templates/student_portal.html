@@ -397,8 +397,8 @@
 
                             // Redirect to the index page after success
                             window.location.href = "/";
-                        // } else if (response.status === "already_submitted") {
-                        //     $("#feedback-submitted-alert").show();
+                        } else if (response.status === "already_submitted") {
+                            $("#feedback-submitted-alert").show();
                         } else {
                             alert("Error in submitting feedback. Please try again.");
                         }
