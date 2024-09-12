@@ -524,7 +524,7 @@ def create_tables_if_not_exists():
         instructor_id INT PRIMARY KEY,
         instructor_name VARCHAR(255) UNIQUE NOT NULL,
         instructor_email VARCHAR(255) NOT NULL
-    )
+    );
     """
 
     # SQL to create the courses table
@@ -533,8 +533,8 @@ def create_tables_if_not_exists():
         course_id SERIAL PRIMARY KEY,
         course_name VARCHAR(255),
         instructor_id INT,
-        batch_pattern VARCHAR(10),
-    )
+        batch_pattern VARCHAR(10)
+    );
     """
 
    # SQL to create the feedback table
@@ -550,8 +550,8 @@ def create_tables_if_not_exists():
     instructorEmailID VARCHAR(100),
     question1Rating INT,
     question2Rating INT,
-    remarks TEXT)
-
+    remarks TEXT
+    );
     """
 
     # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
