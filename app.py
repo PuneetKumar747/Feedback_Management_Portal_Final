@@ -514,57 +514,8 @@ def get_form(course_id):
     print(f"Rendering form for course ID: {course_id}")
     return render_template('course_form.html', course_id=course_id)
 
-# def create_tables_if_not_exists():
-#     create_instructors_table = """
-#     CREATE TABLE IF NOT EXISTS instructors (
-#         instructor_id SERIAL PRIMARY KEY,
-#         instructor_name VARCHAR(255) UNIQUE NOT NULL,
-#         instructor_email VARCHAR(255) NOT NULL
-#     );
-#     """
-
-#     create_courses_table = """
-#     CREATE TABLE IF NOT EXISTS courses (
-#         course_id SERIAL PRIMARY KEY,
-#         course_name VARCHAR(255) NOT NULL,
-#         instructor_id INT REFERENCES instructors(instructor_id),
-#         batch_pattern VARCHAR(255) NOT NULL
-#     );
-#     """
-
-#     create_feedback_table = """
-#     CREATE TABLE IF NOT EXISTS feedback (
-#         feedback_id SERIAL PRIMARY KEY,
-#         course_id INT REFERENCES courses(course_id),
-#         studentEmailID VARCHAR(100),
-#         studentName VARCHAR(100),
-#         dateOfFeedback DATE,
-#         week INT,
-#         instructorEmailID VARCHAR(100),
-#         question1Rating INT,
-#         question2Rating INT,
-#         remarks TEXT
-#     );
-#     """
-    
-#     conn = get_db_connection()
-#     try:
-#         with conn.cursor() as cursor:
-#             # Execute table creation queries
-#             cursor.execute(create_instructors_table)
-#             cursor.execute(create_courses_table)
-#             cursor.execute(create_feedback_table)
-#             conn.commit()
-#             print("Tables created or already exist.")
-#     except psycopg2.Error as e:
-#         print(f"Database error while creating tables: {str(e)}")
-#     finally:
-#         conn.close()
-
-# # Call the function to create tables
-# create_tables_if_not_exists()
-
 def create_tables_if_not_exists():
+    """Create tables if they do not already exist and insert initial data."""
     create_instructors_table = """
     CREATE TABLE IF NOT EXISTS instructors (
         instructor_id SERIAL PRIMARY KEY,
@@ -597,18 +548,6 @@ def create_tables_if_not_exists():
     );
     """
 
-    # Execute table creation
-    conn = get_db_connection()
-    if conn is None:
-        return
-    
-    cursor = conn.cursor()
-    cursor.execute(create_instructors_table)
-    cursor.execute(create_courses_table)
-    cursor.execute(create_feedback_table)
-    conn.commit()
-
-    # Insert data into instructors table
     insert_instructors_query = """
     INSERT INTO instructors (instructor_name, instructor_email)
     VALUES 
@@ -628,9 +567,7 @@ def create_tables_if_not_exists():
     ('Dr. Shankho Pal', 'shankho@sitare.org')
     ON CONFLICT (instructor_name) DO NOTHING;
     """
-    cursor.execute(insert_instructors_query)
 
-    # Insert data into courses table
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
     VALUES
@@ -653,11 +590,28 @@ def create_tables_if_not_exists():
     ('Book Club and Social Emotional Intelligence', 14, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
-    cursor.execute(insert_courses_query)
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+    conn = get_db_connection()
+    if conn is None:
+        return
+
+    try:
+        with conn.cursor() as cursor:
+            # Create tables
+            cursor.execute(create_instructors_table)
+            cursor.execute(create_courses_table)
+            cursor.execute(create_feedback_table)
+            
+            # Insert data into instructors and courses tables
+            cursor.execute(insert_instructors_query)
+            cursor.execute(insert_courses_query)
+            
+            conn.commit()
+    except psycopg2.Error as e:
+        print("Error executing SQL commands:", str(e))
+        conn.rollback()
+    finally:
+        conn.close()
 
 # Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
