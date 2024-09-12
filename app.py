@@ -524,7 +524,7 @@ def create_tables_if_not_exists():
         instructor_id INT PRIMARY KEY,
         instructor_name VARCHAR(255) UNIQUE NOT NULL,
         instructor_email VARCHAR(255) NOT NULL
-    );
+    )
     """
 
     # SQL to create the courses table
@@ -534,7 +534,7 @@ def create_tables_if_not_exists():
         course_name VARCHAR(255),
         instructor_id INT,
         batch_pattern VARCHAR(10),
-    );
+    )
     """
 
    # SQL to create the feedback table
@@ -550,7 +550,7 @@ def create_tables_if_not_exists():
     instructorEmailID VARCHAR(100),
     question1Rating INT,
     question2Rating INT,
-    remarks TEXT);
+    remarks TEXT)
 
     """
 
@@ -571,7 +571,7 @@ def create_tables_if_not_exists():
     (8, 'Dr. Mainak', 'mainakc@sitare.org'),
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-    (12, 'Dr. Shankho Pal', 'shankho@sitare.org');
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
     """
 
     # SQL to insert courses with conflict resolution
@@ -594,7 +594,7 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24');
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
     """
 
     conn = get_db_connection()
