@@ -657,9 +657,9 @@ def create_tables_if_not_exists():
     CREATE TABLE IF NOT EXISTS feedback (
         feedback_id SERIAL PRIMARY KEY,
         course_id INT REFERENCES courses(course_id),
-        coursecode2       VARCHAR(50),
-        studentEmaiID     VARCHAR(100),
-        StudentName       VARCHAR(100),
+        coursecode2 VARCHAR(50),
+        studentEmaiID VARCHAR(100),
+        StudentName VARCHAR(100),
         DateOfFeedback DATE,
         Week INT,
         instructorEmailID VARCHAR(100),
@@ -766,90 +766,75 @@ def submit_all_forms():
     date_of_feedback = datetime.now().date()
     student_email_id = session.get('user_info', {}).get('email')
 
-    # Define the start date for the first week
-    initial_start_date = datetime.strptime("2024-08-27", "%Y-%m-%d")
-
-    # Create the week table
-    week_table = [
-        {
-            "week_no": i + 1,
-            "start_date": initial_start_date + timedelta(weeks=i),
-            "end_date": (initial_start_date + timedelta(weeks=i)) + timedelta(days=6)
-        }
-        for i in range(60)
-    ]
-
-    # Get the current date
-    current_date = datetime.now()
-
-    # Determine the current week
-    current_week_no = next(
-        (week["week_no"] for week in week_table if week["start_date"] <= current_date <= week["end_date"]),
-        None
-    )
-
+    # Process feedback entries
     for key, values in data.items():
         match = re.match(r'course_(\d+)\[(\w+)\]', key)
         if not match:
             print(f"Key '{key}' does not match expected format.")
             continue
-        
+
         course_id = match.group(1)
         field = match.group(2)
+
         if field not in ['understanding', 'revision', 'suggestion']:
             print(f"Field '{field}' is not a recognized feedback field.")
             continue
-        
+
         if course_id not in feedback_entries:
             feedback_entries[course_id] = {'understanding': None, 'revision': None, 'suggestion': None}
 
         feedback_entries[course_id][field] = values[0]
-    
+
     print("Processed feedback entries:", feedback_entries)  # Debugging line
-    
+
     prepared_feedback_entries = []
+    current_week_no = datetime.now().isocalendar()[1]
+
     for course_id, form_data in feedback_entries.items():
         understanding_rating = form_data.get('understanding')
         revision_rating = form_data.get('revision')
-        # suggestion = form_data.get('suggestion')
         instructor = instructor_emails.get(course_id)
         StudentName = session.get('user_info', {}).get('name')  # Retrieve user's name
+
         print(f"Processing feedback for course {course_id}: {form_data}")
 
         if not understanding_rating or not revision_rating:
             print("Missing ratings. Returning error.")
             return jsonify({"status": "error", "message": "All questions must be rated."}), 400
-        
+
         prepared_feedback_entries.append(
-            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None')  # Default to 'None' if empty
-)
+            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None'))  # Default to 'None' if empty
         )
-    
-    create_tables_if_not_exists()
-    
+
     try:
         print("db connecting")
         conn = get_db_connection()
         if conn:
             cursor = conn.cursor()
             print("db connected")
+
             insert_query = """
-                INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (coursecode2, studentEmaiID, DateOfFeedback) DO NOTHING;  -- Adjust this according to your unique constraints
             """
+
             cursor.executemany(insert_query, prepared_feedback_entries)
             conn.commit()
             cursor.close()
             conn.close()
+
             print("Feedback data successfully inserted.")
             return jsonify({"status": "success"})
         else:
             print("Failed to insert feedback due to connection issue.")
             return jsonify({"status": "error", "message": "Database connection failed."}), 500
+
     except psycopg2.Error as e:
         error_details = f"Database error: {str(e)}"
         print(error_details)  # Debugging line
         return jsonify({"status": "error", "message": error_details}), 500
+
     except Exception as e:
         error_details = f"Error: {str(e)}"
         print(error_details)  # Debugging line
