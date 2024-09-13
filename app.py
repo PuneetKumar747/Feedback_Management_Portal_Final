@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__,static_folder='static')
+# create_tables_if_not_exists()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f51ab56895991d7f6507cb464fe0751c9692a')
 
@@ -32,7 +33,7 @@ db_config = {
 
 
 
-# # OAuth configuration
+# OAuth configuration
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
@@ -44,28 +45,10 @@ google = oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     refresh_token_params=None,
-    redirect_uri='https://feedback-final-testing.onrender.com/authorize',  # Updated redirect URI
+    redirect_uri='http://127.0.0.1:5000/authorize',
     client_kwargs={'scope': 'openid email profile'},
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
 )
-
-
-# oauth = OAuth(app)
-# google = oauth.register(
-#     name='google',
-#     client_id='39257771502-vsoftekttnf9ga7l8i49oohlse57b29q.apps.googleusercontent.com',
-#     client_secret='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',
-#     authorize_url='https://accounts.google.com/o/oauth2/auth',
-#     authorize_params=None,
-#     access_token_url='https://oauth2.googleapis.com/token',
-#     access_token_params=None,
-#     refresh_token_url=None,
-#     refresh_token_params=None,
-#     redirect_uri='https://feedback-final-testing.onrender.com/authorize',  # Updated redirect URI
-#     client_kwargs={'scope': 'openid email profile'},
-#     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
-# )
-
 
 def get_db_connection():
     try:
@@ -162,7 +145,7 @@ def authorize():
 
         if re.match(r'^su-.*@sitare\.org$', email):
             return redirect(url_for('dashboard'))
-        elif re.match(r'^(kpuneet474@gmail\.com|[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+        elif re.match(r'^(kpuneet474@gmail\.com)$', user_info['email']):
             return redirect(url_for('teacher_portal'))
         elif re.match(r'^kronit747@gmail\.com$', email):
             return redirect(url_for('admin_portal'))
@@ -182,7 +165,7 @@ def dashboard():
 
     if re.match(r'^su-.*@sitare\.org$', user_info['email']):
         return render_template('Redirect_page.html')
-    elif re.match(r'^(kpuneet474@gmail\.com|[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+    elif re.match(r'^(kpuneet474@gmail\.com|kushal@sitare\.org|preeti@sitare\.org)$', user_info['email']):
         return redirect(url_for('teacher_portal'))
     elif re.match(r'^krishu747@gmail\.com$', user_info['email']):
         return redirect(url_for('admin_portal'))
@@ -337,7 +320,7 @@ def not_saturday():
 def get_feedback_data(instructor_email):
     query = """
         SELECT f.coursecode2, f.DateOfFeedback, f.StudentName, f.Week, f.Question1Rating, f.Question2Rating, f.Remarks, f.studentemaiid, c.course_name
-        FROM feedback1 f
+        FROM feedback f
         JOIN courses c ON f.coursecode2 = CAST(c.course_id AS VARCHAR)
         WHERE f.instructorEmailID = %s AND f.DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
         ORDER BY f.coursecode2, f.Week, f.DateOfFeedback DESC
@@ -401,7 +384,7 @@ def calculate_rating_distributions(feedback_data):
 @app.route('/teacher_portal')
 def teacher_portal():
     user_info = session.get('user_info')
-    if not user_info or not re.match(r'^(kpuneet474@gmail\.com|[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+    if not user_info or not re.match(r'^(kpuneet474@gmail\.com|kushal@sitare\.org|preeti@sitare\.org)$', user_info['email']):
         return redirect(url_for('login'))
 
     instructor_email = user_info['email']
@@ -469,8 +452,8 @@ def admin_portal():
         if conn:
             cursor = conn.cursor()
             query = """
-                SELECT instructorEmailID, coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks 
-                FROM feedback1 
+                SELECT instructorEmailID, CourseCode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks 
+                FROM feedback 
                 WHERE instructorEmailID IN %s AND DateOfFeedback >= (CURRENT_DATE - INTERVAL '2 weeks')
             """
             cursor.execute(query, (tuple(email_ids),))
@@ -515,121 +498,6 @@ def get_form(course_id):
     print(f"Rendering form for course ID: {course_id}")
     return render_template('course_form.html', course_id=course_id)
 
-
-# def create_tables_if_not_exists():
-#     """Create tables if they do not already exist and insert initial data."""
-    
-#     # SQL to create the instructors table
-#     create_instructors_table = """
-#     CREATE TABLE IF NOT EXISTS instructors (
-#         instructor_id SERIAL PRIMARY KEY,
-#         instructor_name VARCHAR(255) UNIQUE NOT NULL,
-#         instructor_email VARCHAR(255) NOT NULL
-#     );
-#     """
-#     # SQL to create the courses table
-#     create_courses_table = """
-#     CREATE TABLE IF NOT EXISTS courses (
-#         course_id SERIAL PRIMARY KEY,
-#         course_name VARCHAR(255),
-#         instructor_id INT,
-#         batch_pattern VARCHAR(10),
-#         CONSTRAINT unique_course_per_instructor_batch UNIQUE (course_name, instructor_id, batch_pattern)
-        
-#     );
-#     """
-#     # SQL to create the feedback table
-#     create_feedback_table = """
-#     CREATE TABLE IF NOT EXISTS feedback (
-#         feedback_id SERIAL PRIMARY KEY,
-#         course_id INT REFERENCES courses(course_id),
-#         coursecode2 VARCHAR(50),
-#         studentEmaiID VARCHAR(100),
-#         StudentName VARCHAR(100),
-#         DateOfFeedback DATE,
-#         Week INT,
-#         instructorEmailID VARCHAR(100),
-#         Question1Rating INT,
-#         Question2Rating INT,
-#         Remarks TEXT
-#     );
-#     """
-#     #(coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
-#     # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
-#     insert_instructors_query = """
-#     INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
-#     VALUES
-#     (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
-#     (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
-#     (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
-#     (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
-#     (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
-#     (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
-#     (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
-#     (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
-#     (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
-#     (10, 'Ms. Geeta', 'geeta@sitare.org'),
-#     (8, 'Dr. Mainak', 'mainakc@sitare.org'),
-#     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
-#     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-#     (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
-#     ON CONFLICT (instructor_id) DO NOTHING;
-#     """
-#     # SQL to insert courses with conflict resolution
-#     insert_courses_query = """
-#     INSERT INTO courses (course_name, instructor_id, batch_pattern)
-#     VALUES
-#     ('Artificial Intelligence', 1, 'su-230'),
-#     ('DBMS', 1, 'su-230'),
-#     ('ADSA', 2, 'su-230'),
-#     ('Probability for CS', 2, 'su-230'),
-#     ('Communication and Ethics', 4, 'su-230'),
-#     ('Java', 13, 'su-230'),
-#     ('Book Club and Social Emotional Intelligence', 14, 'su-230'),
-#     ('Web Applications Development', 6, 'su-220'),
-#     ('OS Principles', 8, 'su-220'),
-#     ('Deep Learning', 9, 'su-220'),
-#     ('Creative Problem Solving', 10, 'su-220'),
-#     ('ITC', 3, 'su-24'),
-#     ('Communication and Ethics', 4, 'su-24'),
-#     ('Introduction to Computers', 3, 'su-24'),
-#     ('Linear Algebra', 12, 'su-24'),
-#     ('Programming Methodology in Python', 9, 'su-24'),
-#     ('Book Club and Social Emotional Intelligence', 14, 'su-24')
-#     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
-#     """
-#     # SQL to check if the feedback table exists
-#     check_feedback_table_query = """
-#     SELECT EXISTS (
-#         SELECT FROM information_schema.tables 
-#         WHERE table_name = 'feedback'
-#     );
-#     """
-
-#     conn = get_db_connection()
-#     if conn is None:
-#         print("Error: Database connection not established.")
-#         return
-    
-#     try:
-#         with conn.cursor() as cursor:
-#             # Create tables
-#             cursor.execute(create_instructors_table)
-#             cursor.execute(create_courses_table)
-#             cursor.execute(create_feedback_table)
-            
-#             # Insert data into instructors and courses tables
-#             cursor.execute(insert_instructors_query)
-#             cursor.execute(insert_courses_query)
-            
-#             conn.commit()
-#             print("Tables created and data inserted successfully.")
-#     except psycopg2.Error as e:
-#         print("Error executing SQL commands:", str(e))
-#         conn.rollback()
-#     finally:
-#         conn.close()
-
 def create_tables_if_not_exists():
     """Create tables if they do not already exist and insert initial data."""
     
@@ -641,6 +509,7 @@ def create_tables_if_not_exists():
         instructor_email VARCHAR(255) NOT NULL
     );
     """
+
     # SQL to create the courses table
     create_courses_table = """
     CREATE TABLE IF NOT EXISTS courses (
@@ -648,27 +517,27 @@ def create_tables_if_not_exists():
         course_name VARCHAR(255),
         instructor_id INT,
         batch_pattern VARCHAR(10),
-        CONSTRAINT unique_course_per_instructor_batch UNIQUE (course_name, instructor_id, batch_pattern)
-        
+        UNIQUE (course_name, instructor_id, batch_pattern)
     );
     """
+
     # SQL to create the feedback table
     create_feedback_table = """
     CREATE TABLE IF NOT EXISTS feedback (
         feedback_id SERIAL PRIMARY KEY,
         course_id INT REFERENCES courses(course_id),
-        coursecode2 VARCHAR(50),
-        studentEmaiID VARCHAR(100),
-        StudentName VARCHAR(100),
-        DateOfFeedback DATE,
-        Week INT,
+        coursecode2       VARCHAR(50),
+        studentemaiid     VARCHAR(100),
+        studentname       VARCHAR(100),
+        dateOfFeedback DATE,
+        week INT,
         instructorEmailID VARCHAR(100),
-        Question1Rating INT,
-        Question2Rating INT,
-        Remarks TEXT
+        question1Rating INT,
+        question2Rating INT,
+        remarks TEXT
     );
     """
-    #(coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+
     # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
     insert_instructors_query = """
     INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
@@ -689,6 +558,7 @@ def create_tables_if_not_exists():
     (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
     ON CONFLICT (instructor_id) DO NOTHING;
     """
+
     # SQL to insert courses with conflict resolution
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
@@ -712,13 +582,6 @@ def create_tables_if_not_exists():
     ('Book Club and Social Emotional Intelligence', 14, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
-    # SQL to check if the feedback table exists
-    check_feedback_table_query = """
-    SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_name = 'feedback'
-    );
-    """
 
     conn = get_db_connection()
     if conn is None:
@@ -731,7 +594,7 @@ def create_tables_if_not_exists():
             cursor.execute(create_instructors_table)
             cursor.execute(create_courses_table)
             cursor.execute(create_feedback_table)
-            
+                
             # Insert data into instructors and courses tables
             cursor.execute(insert_instructors_query)
             cursor.execute(insert_courses_query)
@@ -748,6 +611,8 @@ def create_tables_if_not_exists():
 create_tables_if_not_exists()
 
 
+
+
 @app.route('/submit_all_forms', methods=['POST'])
 def submit_all_forms():
     # again checking the student has already submitted feedback for today
@@ -755,57 +620,91 @@ def submit_all_forms():
     # cur = conn.cursor()
     # current_datetime = datetime.now(timezone.utc)
     # current_date = current_datetime.date()
+
+
     # student_email_id = session.get('user_info', {}).get('email')
     # cur.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
     # feedback_submitted = cur.fetchone()
     
     # if feedback_submitted:
     #     return jsonify({"status": "already_submitted"})
+
     instructor_emails = session.get('instructor_emails', {})
     data = request.form.to_dict(flat=False)
     print("Received form data:", data)  # Debugging line
+
     feedback_entries = {}
     date_of_feedback = datetime.now().date()
     student_email_id = session.get('user_info', {}).get('email')
-    # Process feedback entries
+
+    # Define the start date for the first week
+    initial_start_date = datetime.strptime("2024-08-27", "%Y-%m-%d")
+
+    # Create the week table
+    week_table = [
+        {
+            "week_no": i + 1,
+            "start_date": initial_start_date + timedelta(weeks=i),
+            "end_date": (initial_start_date + timedelta(weeks=i)) + timedelta(days=6)
+        }
+        for i in range(60)
+    ]
+
+    # Get the current date
+    current_date = datetime.now()
+
+    # Determine the current week
+    current_week_no = next(
+        (week["week_no"] for week in week_table if week["start_date"] <= current_date <= week["end_date"]),
+        None
+    )
+
     for key, values in data.items():
         match = re.match(r'course_(\d+)\[(\w+)\]', key)
         if not match:
             print(f"Key '{key}' does not match expected format.")
             continue
+        
         course_id = match.group(1)
         field = match.group(2)
         if field not in ['understanding', 'revision', 'suggestion']:
             print(f"Field '{field}' is not a recognized feedback field.")
             continue
+        
         if course_id not in feedback_entries:
             feedback_entries[course_id] = {'understanding': None, 'revision': None, 'suggestion': None}
+
         feedback_entries[course_id][field] = values[0]
+    
     print("Processed feedback entries:", feedback_entries)  # Debugging line
+    
     prepared_feedback_entries = []
-    current_week_no = datetime.now().isocalendar()[1]
     for course_id, form_data in feedback_entries.items():
         understanding_rating = form_data.get('understanding')
         revision_rating = form_data.get('revision')
+        # suggestion = form_data.get('suggestion')
         instructor = instructor_emails.get(course_id)
         StudentName = session.get('user_info', {}).get('name')  # Retrieve user's name
         print(f"Processing feedback for course {course_id}: {form_data}")
+
         if not understanding_rating or not revision_rating:
             print("Missing ratings. Returning error.")
             return jsonify({"status": "error", "message": "All questions must be rated."}), 400
+        
         prepared_feedback_entries.append(
-            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None'))  # Default to 'None' if empty
+            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None')  # Default to 'None' if empty
+)
         )
+    
+    create_tables_if_not_exists()
+    
     try:
-        print("db connecting")
         conn = get_db_connection()
         if conn:
             cursor = conn.cursor()
-            print("db connected")
             insert_query = """
-            INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (coursecode2, studentEmaiID, DateOfFeedback) DO NOTHING;  -- Adjust this according to your unique constraints
+                INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             cursor.executemany(insert_query, prepared_feedback_entries)
             conn.commit()
@@ -824,41 +723,51 @@ def submit_all_forms():
         error_details = f"Error: {str(e)}"
         print(error_details)  # Debugging line
         return jsonify({"status": "error", "message": error_details}), 500
+
 @app.route('/Redirect_page')
 def redirect_page():
     feedback_status = request.args.get('feedback_status', 'not_submitted')
     return render_template('redirect_page.html', feedback_status=feedback_status)
+
 def send_email():
     sender_email = os.getenv('SENDER_EMAIL', 'your_email@example.com')
     sender_password = os.getenv('EMAIL_PASSWORD', 'your_password')
     smtp_server = 'smtp.example.com'
     smtp_port = 587
+
     recipients = ["recipient1@example.com", "recipient2@example.com"]  # Add actual recipients here
     subject = "Weekly Reminder"
     body = "This is your weekly reminder."
+
     try:
         message = MIMEMultipart()
         message['From'] = sender_email
         message['To'] = ', '.join(recipients)
         message['Subject'] = subject
+
         message.attach(MIMEText(body, 'plain'))
+
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, recipients, message.as_string())
+
         print("Email sent successfully.")
     except Exception as e:
         print("Error sending email:", str(e))
+
 def schedule_emails():
     schedule.every().sunday.at("09:00").do(send_email)
     while True:
         schedule.run_pending()
         time.sleep(60)  # wait one minute
+
 if __name__ == '__main__':
-    get_db_connection()
-    create_tables_if_not_exists()
-    # app.run(debug=True)
-    threading.Thread(target=schedule_emails, daemon=True).start()
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+     get_db_connection()
+     create_tables_if_not_exists()
+     app.run(debug=True)
+
+    # threading.Thread(target=schedule_emails, daemon=True).start()
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host="0.0.0.0", port=port, debug=True)
 
