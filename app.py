@@ -607,19 +607,20 @@ def create_tables_if_not_exists():
 
     conn = get_db_connection()
     if conn is None:
-@@ -730,6 +737,14 @@ def create_tables_if_not_exists():
+        print("Error: Database connection not established.")
+        return
+    
+    try:
+        with conn.cursor() as cursor:
+            # Create tables
+            cursor.execute(create_instructors_table)
+            cursor.execute(create_courses_table)
+            cursor.execute(create_feedback_table)
+            
             # Insert data into instructors and courses tables
             cursor.execute(insert_instructors_query)
             cursor.execute(insert_courses_query)
-
-             # Check if feedback table exists
-            cursor.execute(check_feedback_table_query)
-            feedback_table_exists = cursor.fetchone()[0]
-            if feedback_table_exists:
-                print("Feedback table created successfully.")
-            else:
-                print("Feedback table was NOT created.")
-
+            
             conn.commit()
             print("Tables created and data inserted successfully.")
     except psycopg2.Error as e:
@@ -627,8 +628,11 @@ def create_tables_if_not_exists():
         conn.rollback()
     finally:
         conn.close()
+
 # Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
+
+
 @app.route('/submit_all_forms', methods=['POST'])
 def submit_all_forms():
     # again checking the student has already submitted feedback for today
