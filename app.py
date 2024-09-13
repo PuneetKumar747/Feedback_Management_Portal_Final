@@ -676,21 +676,23 @@ def create_tables_if_not_exists():
     # SQL to insert instructors (without ON CONFLICT for now)
     insert_instructors_query = """
     INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
-    VALUES
-    (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
-    (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
-    (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
-    (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
-    (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
-    (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
-    (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
-    (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
-    (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
-    (10, 'Ms. Geeta', 'geeta@sitare.org'),
-    (8, 'Dr. Mainak', 'mainakc@sitare.org'),
-    (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
-    (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-    (12, 'Dr. Shankho Pal', 'shankho@sitare.org');
+VALUES
+(3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
+(4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+(5, 'Dr. Amit Singhal', 'amit@sitare.org'),
+(1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
+(2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
+(9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+(14, 'Ms. Riya Bangera', 'riya@sitare.org'),
+(13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+(11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
+(10, 'Ms. Geeta', 'geeta@sitare.org'),
+(8, 'Dr. Mainak', 'mainakc@sitare.org'),
+(7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
+(6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
+(12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+ON CONFLICT (instructor_id) DO NOTHING;
+
     """
     print("Prepared SQL to insert instructors.")
     
