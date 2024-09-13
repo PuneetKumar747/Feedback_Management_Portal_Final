@@ -637,7 +637,7 @@ def create_tables_if_not_exists():
     CREATE TABLE IF NOT EXISTS instructors (
         instructor_id SERIAL PRIMARY KEY,
         instructor_name VARCHAR(255) UNIQUE NOT NULL,
-        instructor_email VARCHAR(255) UNIQUE NOT NULL
+        instructor_email VARCHAR(255) NOT NULL
     );
     """
 
@@ -645,22 +645,21 @@ def create_tables_if_not_exists():
     create_courses_table = """
     CREATE TABLE IF NOT EXISTS courses (
         course_id SERIAL PRIMARY KEY,
-        course_name VARCHAR(255) NOT NULL,
+        course_name VARCHAR(255),
         instructor_id INT,
         batch_pattern VARCHAR(10),
-        UNIQUE (course_name, batch_pattern),
-        FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
+        UNIQUE (course_name, instructor_id, batch_pattern)
     );
     """
 
     # SQL to create the feedback table
     create_feedback_table = """
-    CREATE TABLE IF NOT EXISTS feedback1 (
+    CREATE TABLE IF NOT EXISTS feedback (
         feedback_id SERIAL PRIMARY KEY,
         course_id INT REFERENCES courses(course_id),
-        coursecode2 VARCHAR(50),
-        studentemaiid VARCHAR(100),
-        studentname VARCHAR(100),
+        coursecode2       VARCHAR(50),
+        studentemaiid     VARCHAR(100),
+        studentname       VARCHAR(100),
         dateOfFeedback DATE,
         week INT,
         instructorEmailID VARCHAR(100),
@@ -670,55 +669,50 @@ def create_tables_if_not_exists():
     );
     """
 
-    # SQL to insert instructors
+    # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
     insert_instructors_query = """
-    INSERT INTO instructors (instructor_name, instructor_email)
-    VALUES (%s, %s)
-    ON CONFLICT (instructor_email) DO NOTHING;
+    INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
+    VALUES
+    (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
+    (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+    (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
+    (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
+    (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
+    (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+    (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
+    (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+    (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
+    (10, 'Ms. Geeta', 'geeta@sitare.org'),
+    (8, 'Dr. Mainak', 'mainakc@sitare.org'),
+    (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
+    (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_id) DO NOTHING;
     """
 
-    instructors_data = [
-        ('Dr. Achal Agrawal', 'achal@sitare.org'),
-        ('Ms. Preeti Shukla', 'preeti@sitare.org'),
-        ('Dr. Amit Singhal', 'amit@sitare.org'),
-        ('Dr. Pintu Lohar', 'pintu@sitare.org'),
-        ('Dr. Prosenjit', 'prosonjit@sitare.org'),
-        ('Dr. Kushal Shah', 'kpuneet474@gmail.com'),
-        ('Ms. Riya Bangera', 'riya@sitare.org'),
-        ('Mr. Saurabh Pandey', 'saurabh@sitare.org'),
-        ('Dr. Anuja Agrawal', 'anuja@sitare.org'),
-        ('Ms. Geeta', 'geeta@sitare.org'),
-        ('Dr. Mainak', 'mainakc@sitare.org'),
-        ('Jeet Sir', 'jeet.mukherjee@sitare.org'),
-        ('Dr. Ambar Jain', 'ambar@sitare.org'),
-        ('Dr. Shankho Pal', 'shankho@sitare.org')
-    ]
-
-    # SQL to insert courses
+    # SQL to insert courses with conflict resolution
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
-    VALUES (%s, (SELECT instructor_id FROM instructors WHERE instructor_email = %s), %s)
-    ON CONFLICT (course_name, batch_pattern) DO NOTHING;
+    VALUES
+    ('Artificial Intelligence', 1, 'su-230'),
+    ('DBMS', 1, 'su-230'),
+    ('ADSA', 2, 'su-230'),
+    ('Probability for CS', 2, 'su-230'),
+    ('Communication and Ethics', 4, 'su-230'),
+    ('Java', 13, 'su-230'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-230'),
+    ('Web Applications Development', 6, 'su-220'),
+    ('OS Principles', 8, 'su-220'),
+    ('Deep Learning', 9, 'su-220'),
+    ('Creative Problem Solving', 10, 'su-220'),
+    ('ITC', 3, 'su-24'),
+    ('Communication and Ethics', 4, 'su-24'),
+    ('Introduction to Computers', 3, 'su-24'),
+    ('Linear Algebra', 12, 'su-24'),
+    ('Programming Methodology in Python', 9, 'su-24'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
-
-    courses_data = [
-        ('Artificial Intelligence', 'pintu@sitare.org', 'su-230'),
-        ('DBMS', 'pintu@sitare.org', 'su-230'),
-        ('ADSA', 'prosonjit@sitare.org', 'su-230'),
-        ('Probability for CS', 'prosonjit@sitare.org', 'su-230'),
-        ('Communication and Ethics', 'preeti@sitare.org', 'su-230'),
-        ('Java', 'saurabh@sitare.org', 'su-230'),
-        ('Book Club and Social Emotional Intelligence', 'riya@sitare.org', 'su-230'),
-        ('Web Applications Development', 'ambar@sitare.org', 'su-220'),
-        ('OS Principles', 'mainakc@sitare.org', 'su-220'),
-        ('Deep Learning', 'kpuneet474@gmail.com', 'su-220'),
-        ('Creative Problem Solving', 'geeta@sitare.org', 'su-220'),
-        ('Communication and Ethics', 'preeti@sitare.org', 'su-24'),
-        ('Introduction to Computers', 'achal@sitare.org', 'su-24'),
-        ('Linear Algebra', 'shankho@sitare.org', 'su-24'),
-        ('Programming Methodology in Python', 'kpuneet474@gmail.com', 'su-24'),
-        ('Book Club and Social Emotional Intelligence', 'riya@sitare.org', 'su-24')
-    ]
 
     conn = get_db_connection()
     if conn is None:
@@ -732,11 +726,9 @@ def create_tables_if_not_exists():
             cursor.execute(create_courses_table)
             cursor.execute(create_feedback_table)
             
-            # Insert data into instructors table
-            cursor.executemany(insert_instructors_query, instructors_data)
-            
-            # Insert data into courses table
-            cursor.executemany(insert_courses_query, courses_data)
+            # Insert data into instructors and courses tables
+            cursor.execute(insert_instructors_query)
+            cursor.execute(insert_courses_query)
             
             conn.commit()
             print("Tables created and data inserted successfully.")
@@ -746,7 +738,7 @@ def create_tables_if_not_exists():
     finally:
         conn.close()
 
-# Make sure to call this function when your app starts
+# Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
 
 @app.route('/submit_all_forms', methods=['POST'])
@@ -818,26 +810,30 @@ def submit_all_forms():
     for course_id, form_data in feedback_entries.items():
         understanding_rating = form_data.get('understanding')
         revision_rating = form_data.get('revision')
+        # suggestion = form_data.get('suggestion')
         instructor = instructor_emails.get(course_id)
-        StudentName = session.get('user_info', {}).get('name')
+        StudentName = session.get('user_info', {}).get('name')  # Retrieve user's name
+        print(f"Processing feedback for course {course_id}: {form_data}")
 
         if not understanding_rating or not revision_rating:
             print("Missing ratings. Returning error.")
             return jsonify({"status": "error", "message": "All questions must be rated."}), 400
         
         prepared_feedback_entries.append(
-            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None'))
+            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None')  # Default to 'None' if empty
+)
         )
+    
+    create_tables_if_not_exists()
     
     try:
         conn = get_db_connection()
         if conn:
             cursor = conn.cursor()
             insert_query = """
-                INSERT INTO feedback1 (course_id, coursecode2, studentemaiid, studentname, dateOfFeedback, week, instructorEmailID, question1Rating, question2Rating, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-
             cursor.executemany(insert_query, prepared_feedback_entries)
             conn.commit()
             cursor.close()
@@ -849,11 +845,11 @@ def submit_all_forms():
             return jsonify({"status": "error", "message": "Database connection failed."}), 500
     except psycopg2.Error as e:
         error_details = f"Database error: {str(e)}"
-        print(error_details)
+        print(error_details)  # Debugging line
         return jsonify({"status": "error", "message": error_details}), 500
     except Exception as e:
         error_details = f"Error: {str(e)}"
-        print(error_details)
+        print(error_details)  # Debugging line
         return jsonify({"status": "error", "message": error_details}), 500
 
 @app.route('/Redirect_page')
