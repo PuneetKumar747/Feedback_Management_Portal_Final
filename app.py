@@ -24,10 +24,10 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f
 
 # Database configuration
 db_config = {
-    'dbname': "ajay_puneet_feedback",
-    'user': "ajay_puneet_feedback_user",
-    'host':"dpg-cri9k3dds78s73alrgt0-a",
-    'password': "bFeZ5WcSTyeL1JMG7JEbc207N8gSpL6d",
+    'dbname': "puneet_ajay_feed_p9bn",
+    'user': "puneet_ajay_feed_p9bn_user",
+    'host':"dpg-cria49dds78s73am1dm0-a",
+    'password': "ggfFd3WrdJAvdR0gy5bm8oABLjlVpetZ",
     'port': "5432"
 }
 
@@ -379,6 +379,8 @@ def calculate_rating_distributions(feedback_data):
             rating_distribution_q2[q2_rating] += 1
     return rating_distribution_q1, rating_distribution_q2
 
+
+get_db_connection()
 
 
 @app.route('/teacher_portal')
