@@ -732,6 +732,7 @@ def create_tables_if_not_exists():
             # Create tables
             cursor.execute(create_instructors_table)
             cursor.execute(create_courses_table)
+            print("Attempting to create feedback table...")
             cursor.execute(create_feedback_table)
             
             # Insert data into instructors and courses tables
@@ -768,6 +769,95 @@ def check_feedback_table_exists():
     return table_exists
     
 check_feedback_table_exists()
+    #(coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+
+    # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
+    insert_instructors_query = """
+    INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
+    VALUES
+    (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
+    (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+    (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
+    (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
+    (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
+    (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+    (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
+    (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+    (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
+    (10, 'Ms. Geeta', 'geeta@sitare.org'),
+    (8, 'Dr. Mainak', 'mainakc@sitare.org'),
+    (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
+    (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_id) DO NOTHING;
+    """
+
+    # SQL to insert courses with conflict resolution
+    insert_courses_query = """
+    INSERT INTO courses (course_name, instructor_id, batch_pattern)
+    VALUES
+    ('Artificial Intelligence', 1, 'su-230'),
+    ('DBMS', 1, 'su-230'),
+    ('ADSA', 2, 'su-230'),
+    ('Probability for CS', 2, 'su-230'),
+    ('Communication and Ethics', 4, 'su-230'),
+    ('Java', 13, 'su-230'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-230'),
+    ('Web Applications Development', 6, 'su-220'),
+    ('OS Principles', 8, 'su-220'),
+    ('Deep Learning', 9, 'su-220'),
+    ('Creative Problem Solving', 10, 'su-220'),
+    ('ITC', 3, 'su-24'),
+    ('Communication and Ethics', 4, 'su-24'),
+    ('Introduction to Computers', 3, 'su-24'),
+    ('Linear Algebra', 12, 'su-24'),
+    ('Programming Methodology in Python', 9, 'su-24'),
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
+    """
+    # SQL to check if the feedback table exists
+    check_feedback_table_query = """
+    SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'feedback'
+    );
+    """
+
+    conn = get_db_connection()
+    if conn is None:
+        print("Error: Database connection not established.")
+        return
+    
+    try:
+        with conn.cursor() as cursor:
+            # Create tables
+            cursor.execute(create_instructors_table)
+            cursor.execute(create_courses_table)
+            cursor.execute(create_feedback_table)
+            
+            # Insert data into instructors and courses tables
+            cursor.execute(insert_instructors_query)
+            cursor.execute(insert_courses_query)
+
+             # Check if feedback table exists
+            cursor.execute(check_feedback_table_query)
+            feedback_table_exists = cursor.fetchone()[0]
+            if feedback_table_exists:
+                print("Feedback table created successfully.")
+            else:
+                print("Feedback table was NOT created.")
+            
+            conn.commit()
+            print("Tables created and data inserted successfully.")
+    except psycopg2.Error as e:
+        print("Error executing SQL commands:", str(e))
+        conn.rollback()
+    finally:
+        conn.close()
+
+# Call create_tables_if_not_exists() to set up the database
+create_tables_if_not_exists()
+
 
 @app.route('/submit_all_forms', methods=['POST'])
 def submit_all_forms():
