@@ -641,9 +641,7 @@ def create_tables_if_not_exists():
         instructor_email VARCHAR(255) NOT NULL
     );
     """
-    print("Prepared SQL to create instructors table.")
-    
-    # SQL to create the courses table with proper unique constraint
+    # SQL to create the courses table
     create_courses_table = """
     CREATE TABLE IF NOT EXISTS courses (
         course_id SERIAL PRIMARY KEY,
@@ -651,10 +649,9 @@ def create_tables_if_not_exists():
         instructor_id INT,
         batch_pattern VARCHAR(10),
         CONSTRAINT unique_course_per_instructor_batch UNIQUE (course_name, instructor_id, batch_pattern)
+        
     );
     """
-    print("Prepared SQL to create courses table.")
-    
     # SQL to create the feedback table
     create_feedback_table = """
     CREATE TABLE IF NOT EXISTS feedback (
@@ -671,32 +668,28 @@ def create_tables_if_not_exists():
         Remarks TEXT
     );
     """
-    print("Prepared SQL to create feedback table.")
-    
-    # SQL to insert instructors (without ON CONFLICT for now)
+    #(coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
+    # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
     insert_instructors_query = """
     INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
-VALUES
-(3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
-(4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
-(5, 'Dr. Amit Singhal', 'amit@sitare.org'),
-(1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
-(2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
-(9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
-(14, 'Ms. Riya Bangera', 'riya@sitare.org'),
-(13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
-(11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
-(10, 'Ms. Geeta', 'geeta@sitare.org'),
-(8, 'Dr. Mainak', 'mainakc@sitare.org'),
-(7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
-(6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-(12, 'Dr. Shankho Pal', 'shankho@sitare.org')
-ON CONFLICT (instructor_id) DO NOTHING;
-
+    VALUES
+    (3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
+    (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+    (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
+    (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
+    (2, 'Dr. Prosenjit', 'prosonjit@sitare.org'),
+    (9, 'Dr. Kushal Shah', 'kpuneet474@gmail.com'),
+    (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
+    (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
+    (11, 'Dr. Anuja Agrawal', 'anuja@sitare.org'),
+    (10, 'Ms. Geeta', 'geeta@sitare.org'),
+    (8, 'Dr. Mainak', 'mainakc@sitare.org'),
+    (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
+    (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    ON CONFLICT (instructor_id) DO NOTHING;
     """
-    print("Prepared SQL to insert instructors.")
-    
-    # SQL to insert courses (without ON CONFLICT for now)
+    # SQL to insert courses with conflict resolution
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
     VALUES
@@ -716,10 +709,9 @@ ON CONFLICT (instructor_id) DO NOTHING;
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24');
+    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
-    print("Prepared SQL to insert courses.")
-    
     # SQL to check if the feedback table exists
     check_feedback_table_query = """
     SELECT EXISTS (
@@ -727,9 +719,7 @@ ON CONFLICT (instructor_id) DO NOTHING;
         WHERE table_name = 'feedback'
     );
     """
-    print("Prepared SQL to check feedback table existence.")
-    
-    # Establishing database connection
+
     conn = get_db_connection()
     if conn is None:
         print("Error: Database connection not established.")
@@ -737,43 +727,22 @@ ON CONFLICT (instructor_id) DO NOTHING;
     
     try:
         with conn.cursor() as cursor:
-            print("Database connection established.")
-
-            # Create instructors table
+            # Create tables
             cursor.execute(create_instructors_table)
-            print("Executed SQL to create instructors table.")
-            
-            # Create courses table
             cursor.execute(create_courses_table)
-            print("Executed SQL to create courses table.")
-            
-            # Create feedback table
             cursor.execute(create_feedback_table)
-            print("Executed SQL to create feedback table.")
             
-            # Insert data into instructors table
+            # Insert data into instructors and courses tables
             cursor.execute(insert_instructors_query)
-            print("Executed SQL to insert data into instructors table.")
-            
-            # Insert data into courses table
             cursor.execute(insert_courses_query)
-            print("Executed SQL to insert data into courses table.")
             
-            # Commit the transaction to save the changes
             conn.commit()
             print("Tables created and data inserted successfully.")
-    
     except psycopg2.Error as e:
         print("Error executing SQL commands:", str(e))
-        conn.rollback()  # Rollback in case of an error
-        print("Transaction rolled back.")
-    
+        conn.rollback()
     finally:
-        if conn:
-            conn.close()  # Close the connection
-            print("Database connection closed.")
-
-# You can also add print statements to `get_db_connection` to ensure that the connection is being made correctly.
+        conn.close()
 
 # Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
