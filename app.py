@@ -546,7 +546,7 @@ def create_tables_if_not_exists():
     (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
     (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
     (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
-    (2, 'Dr. Prosenjit', 'puneet474@gmail.com'),
+    (2, 'Dr. Prosenjit', 'kpuneet474@gmail.com'),
     (9, 'Dr. Kushal Shah', 'kushal@sitare.org'),
     (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
     (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
