@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 import psycopg2
 from collections import defaultdict
@@ -828,21 +818,16 @@ def submit_all_forms():
     for course_id, form_data in feedback_entries.items():
         understanding_rating = form_data.get('understanding')
         revision_rating = form_data.get('revision')
-        # suggestion = form_data.get('suggestion')
         instructor = instructor_emails.get(course_id)
-        StudentName = session.get('user_info', {}).get('name')  # Retrieve user's name
-        print(f"Processing feedback for course {course_id}: {form_data}")
+        StudentName = session.get('user_info', {}).get('name')
 
         if not understanding_rating or not revision_rating:
             print("Missing ratings. Returning error.")
             return jsonify({"status": "error", "message": "All questions must be rated."}), 400
         
         prepared_feedback_entries.append(
-            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None')  # Default to 'None' if empty
-)
+            (course_id, student_email_id, StudentName, date_of_feedback, current_week_no, instructor, understanding_rating, revision_rating, form_data.get('suggestion', 'None'))
         )
-    
-    create_tables_if_not_exists()
     
     try:
         conn = get_db_connection()
@@ -864,11 +849,11 @@ def submit_all_forms():
             return jsonify({"status": "error", "message": "Database connection failed."}), 500
     except psycopg2.Error as e:
         error_details = f"Database error: {str(e)}"
-        print(error_details)  # Debugging line
+        print(error_details)
         return jsonify({"status": "error", "message": error_details}), 500
     except Exception as e:
         error_details = f"Error: {str(e)}"
-        print(error_details)  # Debugging line
+        print(error_details)
         return jsonify({"status": "error", "message": error_details}), 500
 
 @app.route('/Redirect_page')
