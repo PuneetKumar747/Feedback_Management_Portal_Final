@@ -855,6 +855,7 @@ def schedule_emails():
         schedule.run_pending()
         time.sleep(60)  # wait one minute
 if __name__ == '__main__':
+    get_db_connection()
     create_tables_if_not_exists()
     # app.run(debug=True)
     threading.Thread(target=schedule_emails, daemon=True).start()
