@@ -534,7 +534,8 @@ def create_tables_if_not_exists():
         course_name VARCHAR(255),
         instructor_id INT,
         batch_pattern VARCHAR(10),
-        UNIQUE (course_name, instructor_id, batch_pattern)
+        CONSTRAINT unique_course_per_instructor_batch UNIQUE (course_name, instructor_id, batch_pattern)
+        
     );
     """
     # SQL to create the feedback table
