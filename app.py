@@ -658,16 +658,17 @@ def create_tables_if_not_exists():
         feedback_id SERIAL PRIMARY KEY,
         course_id INT REFERENCES courses(course_id),
         coursecode2       VARCHAR(50),
-        studentemaiid     VARCHAR(100),
-        studentname       VARCHAR(100),
-        dateOfFeedback DATE,
-        week INT,
+        studentEmaiID     VARCHAR(100),
+        StudentName       VARCHAR(100),
+        DateOfFeedback DATE,
+        Week INT,
         instructorEmailID VARCHAR(100),
-        question1Rating INT,
-        question2Rating INT,
-        remarks TEXT
+        Question1Rating INT,
+        Question2Rating INT,
+        Remarks TEXT
     );
     """
+    #(coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
 
     # SQL to insert instructors (as before, with ON CONFLICT DO NOTHING)
     insert_instructors_query = """
@@ -827,9 +828,11 @@ def submit_all_forms():
     create_tables_if_not_exists()
     
     try:
+        print("db connecting")
         conn = get_db_connection()
         if conn:
             cursor = conn.cursor()
+            print("db connected")
             insert_query = """
                 INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
