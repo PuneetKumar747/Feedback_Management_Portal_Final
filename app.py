@@ -24,10 +24,10 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f
 
 # Database configuration
 db_config = {
-    'dbname': "puneet_ajay_feed",
-    'user': "puneet_ajay_feed_user",
-    'host':"dpg-cri8kmtds78s73alel5g-a",
-    'password': "TpSsJFnnSfedtpjEFO2IKIKqYwKA8EYA",
+    'dbname': "ajay_puneet_feedback",
+    'user': "ajay_puneet_feedback_user",
+    'host':"dpg-cri9k3dds78s73alrgt0-a",
+    'password': "bFeZ5WcSTyeL1JMG7JEbc207N8gSpL6d",
     'port': "5432"
 }
 
