@@ -714,6 +714,13 @@ def create_tables_if_not_exists():
     ('Book Club and Social Emotional Intelligence', 14, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
+    # SQL to check if the feedback table exists
+    check_feedback_table_query = """
+    SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'feedback'
+    );
+    """
 
     conn = get_db_connection()
     if conn is None:
@@ -730,6 +737,14 @@ def create_tables_if_not_exists():
             # Insert data into instructors and courses tables
             cursor.execute(insert_instructors_query)
             cursor.execute(insert_courses_query)
+
+             # Check if feedback table exists
+            cursor.execute(check_feedback_table_query)
+            feedback_table_exists = cursor.fetchone()[0]
+            if feedback_table_exists:
+                print("Feedback table created successfully.")
+            else:
+                print("Feedback table was NOT created.")
             
             conn.commit()
             print("Tables created and data inserted successfully.")
