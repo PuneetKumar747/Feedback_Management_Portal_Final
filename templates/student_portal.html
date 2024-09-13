@@ -361,54 +361,60 @@
             });
 
             $("#final-submit").click(function () {
-                const formsData = {};
-                let allFormsValid = true;
-                let incompleteForms = []; // To store incomplete form course IDs
+    const formsData = {};
+    let allFormsValid = true;
+    let incompleteForms = [];
 
-                // Loop through each form and validate
-                $(".form-container form").each(function () {
-                    const form = $(this);
-                    const course = form.data("course");
-                    if (!form[0].checkValidity()) {
-                        allFormsValid = false;
-                        incompleteForms.push(course); // Add the incomplete course ID to the array
-                        form[0].reportValidity(); // This shows the default validation messages
-                    } else {
-                        formsData[`course_${course}`] = form.serializeArray().reduce((obj, item) => {
-                            obj[item.name] = item.value;
-                            return obj;
-                        }, {});
-                    }
-                });
+    $(".form-container form").each(function () {
+        const form = $(this);
+        const course = form.data("course");
+        if (!form[0].checkValidity()) {
+            allFormsValid = false;
+            incompleteForms.push(course);
+            form[0].reportValidity();
+        } else {
+            formsData[`course_${course}`] = form.serializeArray().reduce((obj, item) => {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+        }
+    });
 
-                if (!allFormsValid) {
-                    // Show an alert message if any form is incomplete
-                    alert("Please complete all required fields for the following courses: " + incompleteForms.join(", "));
-                } else {
-                    // If all forms are valid, proceed with form submission
-                    $.post("/submit_all_forms", formsData, function (response) {
-                        if (response.status === "success") {
-                            alert("Your feedback is successfully saved!");
-
-                            // Clear all the forms
-                            $(".form-container form").each(function () {
-                                this.reset();
-                            });
-
-                            // Redirect to the index page after success
-                            window.location.href = "/";
-                        } else if (response.status === "already_submitted") {
-                            $("#feedback-submitted-alert").show();
-                        } else {
-                            alert("Error in submitting feedback. Please try again.");
-                        }
-                    }).fail(function (xhr, status, error) {
-                        console.error("Submission error:", xhr.responseText);
-                        alert("Error in submitting feedback. Please try again.");
+    if (!allFormsValid) {
+        alert("Please complete all required fields for the following courses: " + incompleteForms.join(", "));
+    } else {
+        $.ajax({
+            url: "/submit_all_forms",
+            method: "POST",
+            data: formsData,
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    alert("Your feedback is successfully saved!");
+                    $(".form-container form").each(function () {
+                        this.reset();
                     });
+                    window.location.href = "/";
+                } else if (response.status === "already_submitted") {
+                    $("#feedback-submitted-alert").show();
+                } else {
+                    alert("Error in submitting feedback: " + (response.message || "Please try again."));
                 }
-            });
+            },
+            error: function (xhr, status, error) {
+                console.error("Submission error:", xhr.responseText);
+                let errorMessage = "Error in submitting feedback. ";
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    errorMessage += response.message || "Please try again.";
+                } catch (e) {
+                    errorMessage += "Please try again.";
+                }
+                alert(errorMessage);
+            }
         });
+    }
+});
 
     </script>
 </body>
