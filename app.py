@@ -757,6 +757,18 @@ def create_tables_if_not_exists():
 # Call create_tables_if_not_exists() to set up the database
 create_tables_if_not_exists()
 
+def check_feedback_table_exists():
+    conn = get_db_connection()
+    if conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT to_regclass('public.feedback');")
+            table_exists = cursor.fetchone()[0] is not None
+            print("Feedback table exists:", table_exists)  # Debugging line
+        conn.close()
+    return table_exists
+    
+check_feedback_table_exists()
+
 @app.route('/submit_all_forms', methods=['POST'])
 def submit_all_forms():
     # again checking the student has already submitted feedback for today
@@ -831,7 +843,7 @@ def submit_all_forms():
             insert_query = """
             INSERT INTO feedback (coursecode2, studentEmaiID, StudentName, DateOfFeedback, Week, instructorEmailID, Question1Rating, Question2Rating, Remarks)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (coursecode2, studentEmaiID, DateOfFeedback) DO NOTHING;  -- Adjust this according to your unique constraints
+            ON CONFLICT (studentEmaiID, DateOfFeedback) DO NOTHING;  -- Adjust this according to your unique constraints
             """
 
             cursor.executemany(insert_query, prepared_feedback_entries)
