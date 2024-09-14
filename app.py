@@ -65,7 +65,13 @@ def get_db_connection():
         print("Error connecting to the database:", str(e))
         return None
 
-get_db_connection()
+conn = get_db_connection()
+
+# Check if connection is successful
+if conn:
+    print("Database connection established.")
+else:
+    print("Failed to establish database connection.")
 # Create a cursor object
 cur = conn.cursor()
 
