@@ -105,9 +105,8 @@
 		<p>Please select an option below:</p>
 
 		<!-- Conditionally render the "Fill the Form" button -->
-		{% if feedback_status == 'not_submitted' %}
-		<button onclick="window.location.href='/student_portal'">Fill the Form</button>
-		{% endif %}
+		<a href="{{url_for('student_portal')}}">
+		<button>fill this form</button></a>
 
 		<!-- Button that always appears -->
 		<button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
