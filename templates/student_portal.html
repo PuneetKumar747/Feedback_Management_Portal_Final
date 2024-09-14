@@ -163,6 +163,7 @@
             background-color: #f8f9fa;
             text-align: center;
             position: relative;
+            width: 100%;
         }
 
         .gap {
@@ -383,7 +384,7 @@
 
                 if (!allFormsValid) {
                     // Show an alert message if any form is incomplete
-                    alert("Please complete all required fields for the following courses: " + incompleteForms.join(", "));
+                    alert("Please complete all required fields for the following courses: ");
                 } else {
                     // If all forms are valid, proceed with form submission
                     $.post("/submit_all_forms", formsData, function (response) {
