@@ -65,7 +65,26 @@ def get_db_connection():
         print("Error connecting to the database:", str(e))
         return None
 
+get_db_connection()
+# Create a cursor object
+cur = conn.cursor()
 
+# Define the SQL query
+sql = """
+UPDATE courses
+SET course_name = CASE 
+    WHEN course_id = '17' THEN 'Book Club & SEI (Sem 1)'
+    WHEN course_id = '7' THEN 'Book Club & SEI (Sem 3)'
+    ELSE course_name
+END
+WHERE course_id IN ('17', '7');
+"""
+
+# Execute the SQL query
+cur.execute(sql)
+
+# Commit the changes
+conn.commit()
 # app.config['SECRET_KEY'] = '5x'
 
 # Database configuration
