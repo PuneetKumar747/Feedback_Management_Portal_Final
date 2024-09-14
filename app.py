@@ -18,7 +18,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__,static_folder='static')
-# create_tables_if_not_exists()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '43dce9f95d583e2537057a62713f51ab56895991d7f6507cb464fe0751c9692a')
 
@@ -65,32 +64,6 @@ def get_db_connection():
         print("Error connecting to the database:", str(e))
         return None
 
-conn = get_db_connection()
-
-# Check if connection is successful
-if conn:
-    print("Database connection established.")
-else:
-    print("Failed to establish database connection.")
-# Create a cursor object
-cur = conn.cursor()
-
-# Define the SQL query
-sql = """
-UPDATE courses
-SET course_name = CASE 
-    WHEN course_id = '17' THEN 'Book Club & SEI (Sem 1)'
-    WHEN course_id = '7' THEN 'Book Club & SEI (Sem 3)'
-    ELSE course_name
-END
-WHERE course_id IN ('17', '7');
-"""
-
-# Execute the SQL query
-cur.execute(sql)
-
-# Commit the changes
-conn.commit()
 # app.config['SECRET_KEY'] = '5x'
 
 # Database configuration
@@ -210,26 +183,26 @@ def student_portal():
     
     # code for submitting the data on saturday
 
-    # current_day = datetime.now(timezone.utc).weekday()
-    # is_saturday = (current_day == 5)
+    current_day = datetime.now(timezone.utc).weekday()
+    is_saturday = (current_day == 5)
 
-    # if not is_saturday:
-    #     print("Student portal is only accessible on Saturdays. Redirecting to home.")
-    #     return redirect(url_for('not_saturday'))
+    if not is_saturday:
+        print("Student portal is only accessible on Saturdays. Redirecting to home.")
+        return redirect(url_for('not_saturday'))
 
     # # code for submitting the data one time in a day
 
-    # student_email_id = user_info.get('email')
-    # current_datetime = datetime.now(timezone.utc)
-    # current_date = current_datetime.date()
+    student_email_id = user_info.get('email')
+    current_datetime = datetime.now(timezone.utc)
+    current_date = current_datetime.date()
 
-    # conn = get_db_connection()
-    # cursor = conn.cursor()
-    # cursor.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
-    # feedback_submitted = cursor.fetchone()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
+    feedback_submitted = cursor.fetchone()
 
-    # if feedback_submitted:
-    #     return render_template('student_portal.html', user_info=user_info, feedback_submitted=True)
+    if feedback_submitted:
+        return render_template('student_portal.html', user_info=user_info, feedback_submitted=True)
 
     # Determine batch pattern (e.g., su-230, su-220)
     email = user_info.get('email')
@@ -596,7 +569,7 @@ def create_tables_if_not_exists():
     ('Probability for CS', 2, 'su-230'),
     ('Communication and Ethics', 4, 'su-230'),
     ('Java', 13, 'su-230'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-230'),
+    ('Book Club & SEI (sem 3)', 14, 'su-230'),
     ('Web Applications Development', 6, 'su-220'),
     ('OS Principles', 8, 'su-220'),
     ('Deep Learning', 9, 'su-220'),
@@ -606,7 +579,7 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club and Social Emotional Intelligence', 14, 'su-24')
+    ('Book Club & SEI (sem 1)', 14, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
 
@@ -643,18 +616,18 @@ create_tables_if_not_exists()
 @app.route('/submit_all_forms', methods=['POST'])
 def submit_all_forms():
     # again checking the student has already submitted feedback for today
-    # conn = get_db_connection()
-    # cur = conn.cursor()
-    # current_datetime = datetime.now(timezone.utc)
-    # current_date = current_datetime.date()
+    conn = get_db_connection()
+    cur = conn.cursor()
+    current_datetime = datetime.now(timezone.utc)
+    current_date = current_datetime.date()
 
 
-    # student_email_id = session.get('user_info', {}).get('email')
-    # cur.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
-    # feedback_submitted = cur.fetchone()
+    student_email_id = session.get('user_info', {}).get('email')
+    cur.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
+    feedback_submitted = cur.fetchone()
     
-    # if feedback_submitted:
-    #     return jsonify({"status": "already_submitted"})
+    if feedback_submitted:
+        return jsonify({"status": "already_submitted"})
 
     instructor_emails = session.get('instructor_emails', {})
     data = request.form.to_dict(flat=False)
