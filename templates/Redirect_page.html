@@ -4,6 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Redirect Page</title>
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
 	<style>
 		/* Global styling */
 		body {
@@ -11,7 +14,7 @@
 			text-align: center;
 			margin: 0;
 			padding: 0;
-			background: linear-gradient(to right, #6a11cb, #2575fc);
+			background: linear-gradient(135deg, #6a11cb, #2575fc);
 			color: white;
 			display: flex;
 			justify-content: center;
@@ -20,60 +23,73 @@
 			overflow: hidden;
 		}
 
-		/* Container for content */
+		/* Container styling */
 		.container {
-			background-color: rgba(255, 255, 255, 0.1);
-			padding: 50px;
-			border-radius: 15px;
-			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-			backdrop-filter: blur(10px);
-			max-width: 500px;
-			width: 100%;
+			background: rgba(255, 255, 255, 0.2);
+			padding: 60px;
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+			backdrop-filter: blur(15px);
+			max-width: 550px;
+			width: 90%;
+			animation: fadeIn 1s ease;
+		}
+
+		/* Fade-in animation */
+		@keyframes fadeIn {
+			from { opacity: 0; transform: scale(0.9); }
+			to { opacity: 1; transform: scale(1); }
 		}
 
 		/* Header styling */
 		h1 {
-			font-size: 48px;
-			font-weight: bold;
+			font-size: 50px;
+			font-weight: 700;
 			margin-bottom: 20px;
-			letter-spacing: 2px;
+			letter-spacing: 3px;
+			text-transform: uppercase;
+			background: -webkit-linear-gradient(#ff6f61, #ff9e80);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
 		}
 
 		/* Paragraph styling */
 		p {
-			font-size: 20px;
-			margin-bottom: 40px;
+			font-size: 22px;
+			margin-bottom: 50px;
+			font-weight: 300;
 		}
 
 		/* Button styling */
 		button {
-			padding: 15px 30px;
-			font-size: 20px;
+			padding: 15px 35px;
+			font-size: 18px;
 			margin: 15px;
 			cursor: pointer;
 			border: none;
 			border-radius: 50px;
-			background-color: #ff6f61;
+			background: linear-gradient(135deg, #ff6f61, #ff9e80);
 			color: white;
-			transition: all 0.4s ease;
-			width: 80%;
+			transition: all 0.3s ease;
+			width: 85%;
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 		}
 
 		button:hover {
-			background-color: #ff9e80;
-			transform: scale(1.05);
-			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+			background: linear-gradient(135deg, #ff9e80, #ff6f61);
+			transform: translateY(-5px);
+			box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
 		}
 
 		/* For smaller screens */
 		@media (max-width: 768px) {
 			h1 {
-				font-size: 36px;
+				font-size: 40px;
 			}
 
 			button {
-				font-size: 18px;
-				width: 90%;
+				font-size: 16px;
+				width: 95%;
 			}
 
 			p {
@@ -90,9 +106,9 @@
 
 		<!-- Conditionally render the "Fill the Form" button -->
 		{% if feedback_status == 'not_submitted' %}
-		
-		{% endif %}
 		<button onclick="window.location.href='/student_portal'">Fill the Form</button>
+		{% endif %}
+
 		<!-- Button that always appears -->
 		<button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
 	</div>
