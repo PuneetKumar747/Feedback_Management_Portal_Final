@@ -84,6 +84,7 @@
             width: 100%;
             border-radius: 10px;
             height: 600px;
+            object-fit: cover;
         }
 
         .prev,
@@ -290,6 +291,7 @@
             .mySlides img {
                 height: auto;
                 border-radius: 5px;
+                object-fit: cover;
             }
 
             .prev,
@@ -441,7 +443,7 @@
     <!-- Header -->
     <div class="header">
         <div class="d-flex align-items-center logo">
-            <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Logo">
+            <img src="./static/Sitare-University-Logo.webp" alt="Logo">
             <h3>Feedback Management System</h3>
         </div>
         <ul class="navbar-nav ml-auto">
@@ -456,26 +458,32 @@
     <!-- Slideshow -->
     <div class="slideshow-container">
         <div class="mySlides">
-            <div class="numbertext">1 / 4</div>
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczM_pzvas-QO21jBURIf--EIN_Fooh763jd4GS39tChaB8H9UYzodp-DJFwLibT0qO7pwPQACJE5of4j5imzOzBd7KE87etLOtUS7x7kgWBtrjpFV2-04NW2eVbaD3vQEewPU1OlFtDJJ3-esERS2wrGOw=w1289-h860-s-no-gm"
+            <div class="numbertext">1 / 5</div>
+            <img src="./static/slides(1).jpg"
                 alt="University Group Photo">
             <!-- <div class="text">University Group Photo</div> -->
         </div>
         <div class="mySlides">
-            <div class="numbertext">2 / 4</div>
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczMZ_HiE4KwMQbY6tWuH82EKZ12kijec1wMZQahKmvbmHoMJB_X090Qsg79nOx-vb0-IZ1p7Db0uQh62HQHtu7VmUuiYTEACyGaRoEFKxikLw_h4SaWUgAej6yUnaZezslq_Pxvbr9h5Ltp8YlkMyFU8MQ=w1289-h860-s-no-gm"
+            <div class="numbertext">2 / 5</div>
+            <img src="./static/slides(2).jpg"
                 alt="Batch(2023-2027)">
             <!-- <div class="text">Batch(2023-2027)</div> -->
         </div>
         <div class="mySlides">
-            <div class="numbertext">3 / 4</div>
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczPuDPefPw-74WfLPIORT8J4ehTjsQCHTeBSt_fIS5jh1cTT1n7l_Iiqhs1SnwozqxfOiYSgSMl-70n1R4AYMhCsALsEfKwzwTT0A1zbONlO8WEggZeTytpa01cFMKwRnpTnepRwU03UghzPoeZ4c_x_rQ=w1910-h860-s-no-gm"
+            <div class="numbertext">3 / 5</div>
+            <img src="./static/slides(3).jpg"
                 alt="Batch(2023-2027)">
             <!-- <div class="text">Batch(2023-2027)</div> -->
         </div>
         <div class="mySlides">
-            <div class="numbertext">4 / 4</div>
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczO4h0ZiOPxzdYN_YbUVuF7yCvyEKUW4pNah6IoA1zI6U6rPNWUxSausNWFwwW-AtNaTPAW8fhWaJ3fv3p1YYC0alRaz8PSyON0YQ2F43dei8TQVnhIIXYKdscVZrfJVnw8i2z238iSgguXM5d9BoTFaTw=w1284-h855-s-no-gm"
+            <div class="numbertext">4 / 5</div>
+            <img src="./static/slides(4).jpg"
+                alt="Semester End photo">
+            <!-- <div class="text">Semester End photo</div> -->
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">5 / 5</div>
+            <img src="./static/slides(5).jpg"
                 alt="Semester End photo">
             <!-- <div class="text">Semester End photo</div> -->
         </div>
@@ -488,6 +496,7 @@
         <span class="dot" onclick="currentSlide(2)"></span>
         <span class="dot" onclick="currentSlide(3)"></span>
         <span class="dot" onclick="currentSlide(4)"></span>
+        <span class="dot" onclick="currentSlide(5)"></span>
     </div>
 
     <!-- Login Form -->
