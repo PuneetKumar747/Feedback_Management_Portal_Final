@@ -546,7 +546,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Course Code</th>
+                        <th>Course Name</th>
                         <th>Date</th>
                         <th>Week</th>
                         <th>Q1 Avg Rating</th>
@@ -558,7 +558,7 @@
                     {% for course, data in course_summaries.items() %}
                     {% for week, avg_ratings in data.avg_ratings.items() %}
                     <tr>
-                        <td>{{ course }}</td>
+                        <td>{{ data.course_name }}</td>
                         <td>{{ data.latest_date }}</td>
                         <td>{{ week }}</td>
                         <td>{{ avg_ratings[0]|round(2) }}</td>
@@ -578,13 +578,15 @@
                 <div class="row" style="justify-content: center;">
                     <div class="col-md-6" style="max-width: 43%">
                         <div class="card">
-                            <h4>{{ course }} - Question 1</h4>
+                            <h4>{{ data.course_name }}</h4>
+                            <h4> Question 1</h4>
                             <canvas id="ratingPieChartQ1_{{ course }}"></canvas>
                         </div>
                     </div>
                     <div class="col-md-6" style="max-width: 43%">
                         <div class="card">
-                            <h4>{{ course }} - Question 2</h4>
+                            <h4>{{ data.course_name }}</h4>
+                            <h4> Question 2</h4>
                             <canvas id="ratingPieChartQ2_{{ course }}"></canvas>
                         </div>
                     </div>
