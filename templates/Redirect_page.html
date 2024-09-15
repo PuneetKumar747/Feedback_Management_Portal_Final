@@ -106,10 +106,13 @@
 
     <!-- "Fill This Form" button only visible on Saturday -->
     {% if is_saturday %}
-        <a href="{{ url_for('student_portal') }}">
+<!--         <a href="{{ url_for('student_portal') }}">
             <button>Fill This Form</button>
-        </a>
+        </a> -->
     {% endif %}
+	<a href="{{ url_for('student_portal') }}">
+	    <button>Fill This Form</button>
+	</a>
 
     <!-- "View Previous Feedback" button is always visible -->
     <button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
