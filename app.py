@@ -97,9 +97,9 @@ def authorize():
 
         if re.match(r'^su-.*@sitare\.org$', email):
             return redirect(url_for('dashboard'))
-        elif re.match(r'^(kpuneet474@gmail\.com|^[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+        elif re.match(r'^[a-zA-Z0-9._%+-]+@sitare\.org$', user_info['email']):
             return redirect(url_for('teacher_portal'))
-        elif re.match(r'^kronit747@gmail\.com$', email):
+        elif re.match(r'^admin@sitare\.org$', email):
             return redirect(url_for('admin_portal'))
         else:
             # print("Invalid email format:", email)
@@ -117,9 +117,9 @@ def dashboard():
 
     if re.match(r'^su-.*@sitare\.org$', user_info['email']):
         return render_template('Redirect_page.html')
-    elif re.match(r'^(kpuneet474@gmail\.com|^[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+    elif re.match(r'^[a-zA-Z0-9._%+-]+@sitare\.org$', user_info['email']):
         return redirect(url_for('teacher_portal'))
-    elif re.match(r'^krishu747@gmail\.com$', user_info['email']):
+    elif re.match(r'^admin@sitare\.org$', email):
         return redirect(url_for('admin_portal'))
     else:
         return "Invalid user role", 400
@@ -334,7 +334,7 @@ get_db_connection()
 @app.route('/teacher_portal')
 def teacher_portal():
     user_info = session.get('user_info')
-    if not user_info or not re.match(r'^(kpuneet474@gmail\.com|^[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+    if not user_info or not re.match(r'^[a-zA-Z0-9._%+-]+@sitare\.org$', user_info['email']):
         return redirect(url_for('login'))
 
     instructor_email = user_info['email']
@@ -382,13 +382,13 @@ def teacher_portal():
 @app.route('/admin_portal')
 def admin_portal():
     user_info = session.get('user_info')
-    if not user_info or not re.match(r'^kronit984@gmail\.com$', user_info['email']):
+    if not user_info or not re.match(r'^admin@sitare\.org$', email):
         return redirect(url_for('login'))
     
     feedback_data_by_email = {}
     
     instructor_names = {
-        'kpuneet474@gmail.com': 'Dr. Kushal Shah',
+        'kushal@sitare.org': 'Dr. Kushal Shah',
         'sonika@sitare.org': 'Dr.Sonika Thakral',
         'achal@sitare.org': 'Dr.Achal Agrawal',
         'preet@sitare.org': 'Ms.Preet Shukla',
@@ -496,7 +496,7 @@ def create_tables_if_not_exists():
     (4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
     (5, 'Dr. Amit Singhal', 'amit@sitare.org'),
     (1, 'Dr. Pintu Lohar', 'pintu@sitare.org'),
-    (2, 'Dr. Prosenjit', 'kpuneet474@gmail.com'),
+    (2, 'Dr. Prosenjit Gupta', 'prosenjit@sitare.org'),
     (9, 'Dr. Kushal Shah', 'kushal@sitare.org'),
     (14, 'Ms. Riya Bangera', 'riya@sitare.org'),
     (13, 'Mr. Saurabh Pandey', 'saurabh@sitare.org'),
@@ -517,9 +517,9 @@ def create_tables_if_not_exists():
     ('DBMS', 1, 'su-230'),
     ('ADSA', 2, 'su-230'),
     ('Probability for CS', 2, 'su-230'),
-    ('Communication and Ethics', 4, 'su-230'),
+    ('Communication and Ethics (SEM 3)', 4, 'su-230'),
     ('Java', 13, 'su-230'),
-    ('Book Club & SEI (sem 3)', 14, 'su-230'),
+    ('Book Club & SEI (SEM 3)', 14, 'su-230'),
     ('Web Applications Development', 6, 'su-220'),
     ('OS Principles', 8, 'su-220'),
     ('Deep Learning', 9, 'su-220'),
@@ -529,7 +529,7 @@ def create_tables_if_not_exists():
     ('Introduction to Computers', 3, 'su-24'),
     ('Linear Algebra', 12, 'su-24'),
     ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club & SEI (sem 1)', 14, 'su-24')
+    ('Book Club & SEI (SEM 1)', 14, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
 
