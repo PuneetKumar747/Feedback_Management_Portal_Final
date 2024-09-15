@@ -140,9 +140,6 @@ def student_portal():
     current_day = datetime.now(timezone.utc).weekday()
     is_saturday = (current_day == 5)
 
-    if not is_saturday:
-        print("Student portal is only accessible on Saturdays. Redirecting to home.")
-        return redirect(url_for('not_saturday'))
 
     # # code for submitting the data one time in a day
 
@@ -191,8 +188,8 @@ def student_portal():
     session['instructor_emails'] = instructor_emails
     print("Instructor emails:", instructor_emails)
 
-    return render_template('student_portal.html', user_info=user_info, courses=courses)
-# return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
+    # return render_template('student_portal.html', user_info=user_info, courses=courses,)
+    return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
 
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
@@ -224,8 +221,6 @@ def not_saturday():
     student_email = user_info.get('email')
     feedback_data = []  # Default to show no data
 
-    # Check if today is Saturday
-    is_saturday = datetime.now().weekday() == 5
 
     if request.method == 'POST':
         num_weeks = request.form.get('num_feedback', '0')
@@ -266,7 +261,7 @@ def not_saturday():
                 print(f"Database error while fetching feedback: {str(e)}")
                 feedback_data = []
 
-    return render_template('saturday.html', user_info=user_info, feedback_data=feedback_data, is_saturday=is_saturday)
+    return render_template('saturday.html', user_info=user_info, feedback_data=feedback_data)
 
 
 def get_feedback_data(instructor_email):
