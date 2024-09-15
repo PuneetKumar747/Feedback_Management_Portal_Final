@@ -232,22 +232,13 @@ def not_saturday():
                 conn = get_db_connection()
                 if conn:
                     cursor = conn.cursor()
-
-                    # Define SQL query to fetch feedback data with course name
                     query = """
                     SELECT 
-                        courses.course_name, 
-                        feedback.DateOfFeedback, 
-                        feedback.Week, 
-                        feedback.Question1Rating, 
-                        feedback.Question2Rating, 
-                        feedback.Remarks
+                        coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
                     FROM 
                         feedback
-                    JOIN 
-                        courses ON feedback.coursecode2 = courses.course_id
                     WHERE 
-                        feedback.studentEmaiID = %s
+                        studentEmaiID = %s
                     """
 
 
