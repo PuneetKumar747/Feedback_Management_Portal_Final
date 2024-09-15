@@ -228,18 +228,28 @@ def not_saturday():
             print("No feedback data selected.")
         else:
             try:
+               # Establish database connection
                 conn = get_db_connection()
                 if conn:
                     cursor = conn.cursor()
 
+                    # Define SQL query to fetch feedback data with course name
                     query = """
                     SELECT 
-                        coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
+                        courses.course_name, 
+                        feedback.DateOfFeedback, 
+                        feedback.Week, 
+                        feedback.Question1Rating, 
+                        feedback.Question2Rating, 
+                        feedback.Remarks
                     FROM 
                         feedback
+                    JOIN 
+                        courses ON feedback.coursecode2 = courses.course_id
                     WHERE 
-                        studentEmaiID = %s
+                        feedback.studentEmaiID = %s
                     """
+
 
                     if num_weeks.isdigit() and int(num_weeks) > 0:
                         num_weeks = int(num_weeks)
