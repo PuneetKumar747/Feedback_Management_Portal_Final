@@ -227,17 +227,26 @@ def not_saturday():
             print("No feedback data selected.")
         else:
             try:
-               # Establish database connection
+              # Establish database connection
                 conn = get_db_connection()
                 if conn:
                     cursor = conn.cursor()
+
+                    # Define SQL query to fetch feedback data with course name
                     query = """
-                    SELECT 
-                        coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
-                    FROM 
-                        feedback
-                    WHERE 
-                        studentEmaiID = %s
+                        SELECT 
+                            c.course_name, 
+                            f.DateOfFeedback, 
+                            f.Week, 
+                            f.Question1Rating, 
+                            f.Question2Rating, 
+                            f.Remarks
+                        FROM 
+                            feedback f
+                        JOIN 
+                            courses c ON f.coursecode2 = c.course_id
+                        WHERE 
+                            f.studentEmaiID = %s
 
                     """
 
@@ -680,37 +689,45 @@ def redirect_page():
     return render_template('redirect_page.html', feedback_status=feedback_status)
 
 def send_email():
-    sender_email = os.getenv('SENDER_EMAIL', 'your_email@example.com')
-    sender_password = os.getenv('EMAIL_PASSWORD', 'your_password')
-    smtp_server = 'smtp.example.com'
-    smtp_port = 587
+    
+    sender_email = "university@sitare.org" # Sender Email
+    receiver_emails = ["su-students@sitare.org"]  # Receiver Email
+    subject = "Weekly Reminder for feedback"
+    body = "All students, please fill the feedback for all subjects." # Body should change
 
-    recipients = ["recipient1@example.com", "recipient2@example.com"]  # Add actual recipients here
-    subject = "Weekly Reminder"
-    body = "This is your weekly reminder."
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+    smtp_user = sender_email
+    # smtp_password = "jyrj qnay shxz cfov"
+    smtp_password = "Enter app specific password"  # Use app-specific password for security
 
     try:
-        message = MIMEMultipart()
-        message['From'] = sender_email
-        message['To'] = ', '.join(recipients)
-        message['Subject'] = subject
-
-        message.attach(MIMEText(body, 'plain'))
-
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, recipients, message.as_string())
-
-        print("Email sent successfully.")
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        
+        # Send email to each recipient
+        for recipient_email in receiver_emails:
+            msg['To'] = recipient_email
+            server.sendmail(sender_email, recipient_email, msg.as_string())
+            print(f"Email sent to {recipient_email}")
+        
+        server.quit()
     except Exception as e:
-        print("Error sending email:", str(e))
+        print(f"Failed to send email: {str(e)}")
 
-def schedule_emails():
-    schedule.every().sunday.at("09:00").do(send_email)
-    while True:
-        schedule.run_pending()
-        time.sleep(60)  # wait one minute
+# Schedule the email to be sent every Monday at 10:48 AM
+schedule.every().saturday.at("06:00").do(send_email)
+
+# Run the scheduling loop
+while True:
+    schedule.run_pending()
+    time.sleep(60)  # Wait a minute before checking again
 
 if __name__ == '__main__':
      get_db_connection()
