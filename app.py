@@ -137,8 +137,8 @@ def student_portal():
     
     # code for submitting the data on saturday
 
-    current_day = datetime.now(timezone.utc).weekday()
-    is_saturday = (current_day == 5)
+    # current_day = datetime.now(timezone.utc).weekday()
+    # is_saturday = (current_day == 5)
 
 
     # # code for submitting the data one time in a day
@@ -188,8 +188,8 @@ def student_portal():
     session['instructor_emails'] = instructor_emails
     print("Instructor emails:", instructor_emails)
 
-    # return render_template('student_portal.html', user_info=user_info, courses=courses,)
-    return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
+    return render_template('student_portal.html', user_info=user_info, courses=courses)
+    # return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
 
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
