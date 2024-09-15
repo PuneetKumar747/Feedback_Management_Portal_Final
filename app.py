@@ -233,12 +233,20 @@ def not_saturday():
                 if conn:
                     cursor = conn.cursor()
                     query = """
-                    SELECT 
-                        coursecode2, DateOfFeedback, Week, Question1Rating, Question2Rating, Remarks
-                    FROM 
-                        feedback
-                    WHERE 
-                        studentEmaiID = %s
+                        SELECT 
+                            c.course_name, 
+                            f.DateOfFeedback, 
+                            f.Week, 
+                            f.Question1Rating, 
+                            f.Question2Rating, 
+                            f.Remarks
+                        FROM 
+                            feedback f
+                        JOIN 
+                            courses c ON f.coursecode2 = c.course_id
+                        WHERE 
+                            f.studentEmaiID = %s
+
                     """
 
 
