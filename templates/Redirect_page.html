@@ -101,16 +101,19 @@
 <body>
 
 	<div class="container">
-		<h1>Welcome!</h1>
-		<p>Please select an option below:</p>
+        <h1>Welcome!</h1>
+        <p>Please select an option below:</p>
 
-		<!-- Conditionally render the "Fill the Form" button -->
-		<a href="{{url_for('student_portal')}}">
-		<button>Fill The form</button></a>
+    <!-- "Fill This Form" button only visible on Saturday -->
+    {% if is_saturday %}
+        <a href="{{ url_for('student_portal') }}">
+            <button>Fill This Form</button>
+        </a>
+    {% endif %}
 
-		<!-- Button that always appears -->
-		<button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
-	</div>
+    <!-- "View Previous Feedback" button is always visible -->
+    <button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
+    </div>
 
 </body>
 </html>
