@@ -1,5 +1,5 @@
 # Sitare University Feedback System
-Developer :- Puneet,Ajay
+Developer :- Puneet,Ajay <br>
 Instructor :- Dr.Kushal Shah
 
 This is a Flask-based web application designed to manage student feedback for courses at Sitare University. The system allows students to submit feedback, instructors to view feedback for their courses, and administrators to over all feedback.
