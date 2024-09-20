@@ -755,13 +755,11 @@ while True:
     time.sleep(60)  # Wait a minute before checking again
 
 if __name__ == '__main__':
-    get_db_connection()
-    create_tables_if_not_exists()
-    
-    # Start a thread for scheduling emails
-    threading.Thread(target=schedule_emails, daemon=True).start()
+     get_db_connection()
+     create_tables_if_not_exists()
+     app.run(debug=True)
 
-    # Set up the Flask application to run on a specific port
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    # threading.Thread(target=schedule_emails, daemon=True).start()
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host="0.0.0.0", port=port, debug=True)
 
