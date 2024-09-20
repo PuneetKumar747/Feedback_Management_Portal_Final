@@ -689,22 +689,46 @@ def redirect_page():
     return render_template('redirect_page.html', feedback_status=feedback_status)
 
 def send_email():
-    
-    sender_email = "university@sitare.org" # Sender Email
+    sender_email = "su-23028@sitare.org"
     receiver_emails = ["su-students@sitare.org"]  # Receiver Email
-    subject = "Weekly Reminder for feedback"
-    body = "All students, please fill the feedback for all subjects." # Body should change
+    subject = "Weekly Feedback"
+    
+    # HTML formatted email body
+    body = """
+    <html>
+    <body style="font-family: Arial, sans-serif; color: #333333; margin: 0; padding: 0;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+            <h2 style="color: #4CAF50; text-align: center;">Reminder for Feedback</h2>
+            <p style="font-size: 16px; line-height: 1.6;">
+                This is a quick reminder to complete this week's feedback. Your feedback is valuable and helps us improve your experience. We'd love to hear from you before the week ends.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6;">
+                Take a moment to share your thoughts and let us know how we can continue to enhance your learning journey.
+            </p>
+            <p style="text-align: center;">
+                <a href="https://feedback-final-testing.onrender.com/" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Submit Feedback Now!</a>
+            </p>
+            <hr style="border: 0; border-top: 1px solid #dddddd;">
+            <p style="font-size: 14px; line-height: 1.6; text-align: left;">
+                <strong>Warm Regards,</strong><br>
+                Puneet Kr (2nd year)<br>
+                Feedback Management Team<br>
+                Sitare University
+            </p>
+        </div>
+    </body>
+    </html>
+    """
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(body, 'html'))
 
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
     smtp_user = sender_email
-    # smtp_password = "jyrj qnay shxz cfov"
-    smtp_password = "Enter app specific password"  # Use app-specific password for security
+    smtp_password = "msjz ujvp iypk cawu"  # Use app-specific password for security
 
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
@@ -721,8 +745,8 @@ def send_email():
     except Exception as e:
         print(f"Failed to send email: {str(e)}")
 
-# Schedule the email to be sent every Monday at 10:48 AM
-schedule.every().saturday.at("06:00").do(send_email)
+# Schedule the email to be sent every Friday at 14:15
+schedule.every().saturday.at("10:00").do(send_email)
 
 # Run the scheduling loop
 while True:
