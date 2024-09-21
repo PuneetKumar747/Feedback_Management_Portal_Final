@@ -221,56 +221,52 @@ def not_saturday():
     student_email = user_info.get('email')
     feedback_data = []  # Default to show no data
 
-
     if request.method == 'POST':
         num_weeks = request.form.get('num_feedback', '0')
-        if num_weeks == '0':
-            print("No feedback data selected.")
-        else:
+        if num_weeks != '0':
             try:
-              # Establish database connection
                 conn = get_db_connection()
                 if conn:
-                    cursor = conn.cursor()
+                    with conn.cursor() as cursor:
+                        query = """
+                            SELECT 
+                                c.course_name, 
+                                f.DateOfFeedback, 
+                                f.Week, 
+                                f.Question1Rating, 
+                                f.Question2Rating, 
+                                f.Remarks
+                            FROM 
+                                feedback f
+                            JOIN 
+                                courses c ON f.coursecode2 = c.course_id
+                            WHERE 
+                                f.studentEmaiID = %s
+                        """
+                        params = [student_email]
 
-                    # Define SQL query to fetch feedback data with course name
-                    query = """
-                        SELECT 
-                            c.course_name, 
-                            f.DateOfFeedback, 
-                            f.Week, 
-                            f.Question1Rating, 
-                            f.Question2Rating, 
-                            f.Remarks
-                        FROM 
-                            feedback f
-                        JOIN 
-                            courses c ON f.coursecode2 = c.course_id
-                        WHERE 
-                            f.studentEmaiID = %s
+                        if num_weeks != 'all':
+                            if num_weeks.isdigit() and int(num_weeks) > 0:
+                                start_date = datetime.now() - timedelta(days=datetime.now().weekday() + int(num_weeks) * 7)
+                                query += " AND f.DateOfFeedback >= %s"
+                                params.append(start_date)
+                            else:
+                                print(f"Invalid num_weeks value: {num_weeks}")
+                                return render_template('saturday.html', user_info=user_info, feedback_data=[])
 
-                    """
-
-
-                    if num_weeks.isdigit() and int(num_weeks) > 0:
-                        num_weeks = int(num_weeks)
-                        start_date = datetime.now() - timedelta(days=datetime.now().weekday() + num_weeks * 7)
-                        query += " AND DateOfFeedback >= %s"
-                        cursor.execute(query + " ORDER BY DateOfFeedback DESC", (student_email, start_date))
-                    elif num_weeks == 'all':
-                        cursor.execute(query + " ORDER BY DateOfFeedback DESC", (student_email,))
-
-                    
-                    feedback_data = cursor.fetchall()
-                    cursor.close()
-                    conn.close()
-                    print("Feedback data fetched for student:", student_email)
+                        query += " ORDER BY f.DateOfFeedback DESC"
+                        
+                        cursor.execute(query, tuple(params))
+                        feedback_data = cursor.fetchall()
+                        
+                    print(f"Feedback data fetched for student: {student_email}")
                 else:
-                    print("Failed to fetch feedback data due to connection issue.")
-                    feedback_data = []
+                    print("Failed to establish database connection.")
             except psycopg2.Error as e:
                 print(f"Database error while fetching feedback: {str(e)}")
-                feedback_data = []
+            finally:
+                if conn:
+                    conn.close()
 
     return render_template('saturday.html', user_info=user_info, feedback_data=feedback_data)
 
