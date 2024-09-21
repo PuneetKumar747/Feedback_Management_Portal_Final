@@ -749,18 +749,38 @@ def send_email():
 # Schedule the email to be sent every Friday at 14:15
 schedule.every().saturday.at("10:00").do(send_email)
 
-# Run the scheduling loop
-while True:
-    schedule.run_pending()
-    time.sleep(60)  # Wait a minute before checking again
 
 if __name__ == '__main__':
     get_db_connection()
     create_tables_if_not_exists()
-    port = int(os.environ.get('PORT', 5000))  # Use the PORT from the environment or default to 5000
+    
+    # Use the PORT from the environment or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Start the Flask application
     app.run(host='0.0.0.0', port=port)
-    # port = int(os.environ.get('PORT', 10000))
-    # # app.run(host="0.0.0.0", port=port, debug=False)
-    # app.run_server(debug=True, port=8050, host='0.0.0.0')
+
+    # Start the scheduling thread
+    def run_schedule():
+        while True:
+            schedule.run_pending()
+            time.sleep(60)  # Check every minute
+
+    schedule_thread = threading.Thread(target=run_schedule)
+    schedule_thread.start()
+
+# Run the scheduling loop
+# while True:
+#     schedule.run_pending()
+#     time.sleep(60)  # Wait a minute before checking again
+
+# if __name__ == '__main__':
+#     get_db_connection()
+#     create_tables_if_not_exists()
+#     port = int(os.environ.get('PORT', 5000))  # Use the PORT from the environment or default to 5000
+#     app.run(host='0.0.0.0', port=port)
+#     # port = int(os.environ.get('PORT', 10000))
+#     # # app.run(host="0.0.0.0", port=port, debug=False)
+#     # app.run_server(debug=True, port=8050, host='0.0.0.0')
 
 
