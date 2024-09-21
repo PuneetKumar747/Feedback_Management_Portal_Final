@@ -747,7 +747,7 @@ def send_email():
         print(f"Failed to send email: {str(e)}")
 
 # Schedule the email to be sent every Friday at 14:15
-schedule.every().saturday.at("10:00").do(send_email)
+schedule.every().saturday.at("18:00").do(send_email)
 
 
 if __name__ == '__main__':
