@@ -757,8 +757,8 @@ while True:
 if __name__ == '__main__':
     get_db_connection()
     create_tables_if_not_exists()
-    port = int(os.environ.get('PORT', 10000))
+    # port = int(os.environ.get('PORT', 10000))
     # app.run(host="0.0.0.0", port=port, debug=False)
-    app.run(debug=True, port = port)
+    app.run_server(debug=True, port=8050, host='0.0.0.0')
 
 
