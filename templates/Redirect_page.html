@@ -105,15 +105,28 @@
         <p>Please select an option below:</p>
 
     <!-- "Fill This Form" button only visible on Saturday -->
-    {% if is_saturday %}
+    <!-- {% if is_saturday %}
         <a href="{{ url_for('student_portal') }}">
             <button>Fill This Form</button>
         </a>
-    {% endif %}
+    {% endif %} -->
+    <a id='fillFormButton' style="display: none;" href="{{ url_for('student_portal') }}">
+        <button>Fill This Form</button>
+    </a>
 	
     <!-- "View Previous Feedback" button is always visible -->
     <button onclick="window.location.href='/not_saturday'">View Previous Feedback</button>
     </div>
+	<script>
+            window.onload = function () {
+                var today = new Date();
+                var dayOfWeek = today.getUTCDay();
+                if (dayOfWeek === 6) { // 4 corresponds to Thursday
+                    document.getElementById("fillFormButton").style.display = "block";
+                }
+            };
+        </script>
 
 </body>
+
 </html>
