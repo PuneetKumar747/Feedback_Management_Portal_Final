@@ -239,9 +239,9 @@ def not_saturday():
                             FROM 
                                 feedback f
                             JOIN 
-                                courses c ON f.coursecode2 = c.course_id
+                                courses c ON f.coursecode2 = c.course_id::varchar
                             WHERE 
-                                f.studentEmaiID = %s
+                                f.studentemaiid = %s
                         """
                         params = [student_email]
 
@@ -256,14 +256,21 @@ def not_saturday():
 
                         query += " ORDER BY f.DateOfFeedback DESC"
                         
+                        print(f"Executing query: {query}")
+                        print(f"With parameters: {params}")
+                        
                         cursor.execute(query, tuple(params))
                         feedback_data = cursor.fetchall()
+                        
+                        print(f"Fetched {len(feedback_data)} rows of feedback data")
                         
                     print(f"Feedback data fetched for student: {student_email}")
                 else:
                     print("Failed to establish database connection.")
             except psycopg2.Error as e:
                 print(f"Database error while fetching feedback: {str(e)}")
+                print(f"Query that caused the error: {query}")
+                print(f"Parameters: {params}")
             finally:
                 if conn:
                     conn.close()
