@@ -707,7 +707,7 @@ def send_email():
                 Take a moment to share your thoughts and let us know how we can continue to enhance your learning journey.
             </p>
             <p style="text-align: center;">
-                <a href="https://feedback-final-testing.onrender.com/" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Submit Feedback Now!</a>
+                <a href="https://feedback-final-testing-1.onrender.com/" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Submit Feedback Now!</a>
             </p>
             <hr style="border: 0; border-top: 1px solid #dddddd;">
             <p style="font-size: 14px; line-height: 1.6; text-align: left;">
