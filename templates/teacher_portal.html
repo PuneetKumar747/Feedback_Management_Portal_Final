@@ -3,591 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Portal</title>
+    <title>Enhanced Teacher Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <style>
-    
         body {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 18px;
-            line-height: 1.5;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
             color: #333;
-            background-color: #f9f9f9;
         }
 
-
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #dee2e6;
-            margin-bottom: 20px;
-            padding: 4px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .header h2 {
-            margin: 0 auto;
-            font-size: 2rem;
-            color: #343a40;
-            flex-grow: 1;
-            text-align: center;
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
         }
 
         .home-button {
-            background-color: #007bff;
-            border-radius: 8px;
+            background-color: #fff;
+            color: #4a90e2;
             border: none;
-            color: #ffffff;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
             padding: 10px 20px;
-            text-decoration: none;
-            transition: background-color 200ms ease-in-out, transform 200ms ease-in-out, box-shadow 200ms ease-in-out;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .home-button:hover {
-            background-color: #0056b3;
-            /* Darker shade of blue */
-            color: #ffffff;
-            text-decoration: none;
-            transform: scale(1.05);
-            /* Slightly enlarges the button */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            /* Adds a subtle shadow */
+            background-color: #f0f2f5;
+            transform: translateY(-2px);
         }
-
-
-
-        h1,
-        h2,
-        h3 {
-            font-weight: bold;
-            color: #007bff;
-        }
-
-
-        h1 {
-            font-size: 2.5rem;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-        }
-
-        h3 {
-            font-size: 1.75rem;
-        }
-
-
 
         .card {
             background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            /* Light gray border */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
         }
 
-
-
-        .card h2 {
-            font-size: 1.75rem;
-            color: #ffffff;
-            margin-bottom: 20px;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-
-        .card h3 {
-            font-size: 1.5rem;
-            color: #343a40;
-            margin-bottom: 15px;
+        .card-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            font-weight: 600;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
-
-
 
         .table-container {
             background-color: #fff;
             border-radius: 10px;
-            padding: 40px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
-            /* Light gray border */
-        }
-
-
-
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #ffffff;
-        }
-
-        .table th,
-        .table td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #dee2e6;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .table th {
-            background-color: #4caf50;
-            color: #fff;
+            background-color: #4a90e2;
+            color: white;
         }
 
-        .table td {
-            color: #495057;
-        }
-
-        /* .scrollable {
-            max-height: 400px;
-            overflow-y: auto;
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-        }
-
-        .scrollable::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .scrollable::-webkit-scrollbar-thumb {
-            background-color: #007bff;
-            border-radius: 4px;
-        } */
-
-        #ratingPieChartQ1,
-        #ratingPieChartQ2 {
-            max-width: 300px;
-            max-height: 300px;
-            margin: 0 auto;
-        }
-
-        .rating-distribution {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .rating-distribution ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .rating-distribution li {
-            background: #e9ecef;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 4px;
-        }
-
-        .rating-distribution h2 {
-            font-size: 1.5rem;
-            color: #007bff;
-        }
-
-        .scrollable p {
-            margin: 0;
-            padding: 8px 12px;
-            /* Increased padding for better readability */
-            font-size: 1rem;
-            /* Slightly larger font size for better visibility */
-            color: #343a40;
-            /* Darker text color for better contrast */
-        }
-
-        .scrollable hr {
-            margin: 12px 0;
-            border: 0;
-            border-top: 1px solid #dee2e6;
-            /* Subtle separator between remarks */
-        }
-
-        .card-header {
-            background-color: #71e475f5;
-            /* Pastel pink */
-            color: #fff;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* Bold font for the header */
-
-        .course-name {
-            margin-top: 12px;
-            color: #0056b3;
-            /* Darker color for course name */
-            font-size: 1.5rem;
-            font-weight: 600;
-            /* Added font weight for emphasis */
-        }
-
-        .remarks-container {
-            display: none;
-            /* Initially hidden */
-        }
-
-        /* Add some accent colors */
-        .highlight {
-            color: #ff69b4;
-            /* Pastel pink */
-        }
-
-        .success {
-            color: #4CAF50;
-            /* Green */
-        }
-
-        .info {
-            color: #2196F3;
-            /* Blue */
-        }
-
-
-        .card-body {
-            padding: 20px;
-            /* Increased padding for better spacing */
-            background-color: #f8f9fa;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .card-header button {
-            font-size: 1.25rem;
-            color: #ffffff;
-            /* Bright color for buttons to stand out */
-            text-decoration: none;
-            transition: color 0.3s ease;
-            /* Smooth transition on hover */
-        }
-
-        .card-header button:hover {
-            text-decoration: none;
-            color: #e6f055fb;
-            /* Slightly darker hover color */
-        }
-
-        .badge-info {
-            background-color: hsl(0, 9%, 6%);
-            /* Light blue for badges */
-            font-size: 0.85rem;
-            /* Smaller font for badges */
-            padding: 5px 10px;
-            border-radius: 3px;
-        }
-
-        .scrollable {
-            max-height: 400px;
-            overflow-y: auto;
-            background-color: #ffffff;
-            padding: 20px;
-            /* Increased padding for better spacing */
-            border-radius: 10px;
-            /* border: 1px solid #dee2e6; */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            /* Added subtle shadow */
-        }
-
-        .scrollable::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .scrollable::-webkit-scrollbar-thumb {
-            background-color: #7dddee;
-            border-radius: 4px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-            /* Added shadow inside scrollbar for better visual effect */
-        }
-
-        .heartbeat-chart-container {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        #heartbeatChart {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            background-color: #4caf50;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 30px;
+        .btn-primary {
+            background-color: #4a90e2;
             border: none;
-            cursor: pointer;
         }
 
-        .btn:hover {
-            background-color: rgba(255, 0, 0, 0.53);
+        .btn-primary:hover {
+            background-color: #3a7bc8;
         }
 
-
-
-        footer {
-            padding: 20px;
-            background-color: #f8f9fa;
-            text-align: center;
-            position: relative;
-            border-top: 2px solid #dee2e6;
-            /* Adds a subtle top border */
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            /* Adds a shadow for depth */
-            font-family: 'Roboto', sans-serif;
-            /* Modern font for a clean look */
-            color: #6c757d;
-            /* Slightly darker text color */
+        canvas {
+            max-width: 100%;
+            height: auto;
         }
 
-        footer a {
-            color: #007bff;
-            /* Link color */
-            text-decoration: none;
-            /* Removes underline from links */
-            transition: color 0.3s ease;
-            /* Smooth transition for hover effect */
+        /* Animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
         }
 
-        footer a:hover {
-            color: #0056b3;
-            /* Darker blue on hover */
+        .animated {
+            animation-duration: 1s;
+            animation-fill-mode: both;
         }
 
-        footer p {
-            margin: 0;
-            /* Ensures no extra spacing */
-            font-size: 14px;
-            /* Slightly smaller font size */
-            line-height: 1.5;
-            /* Improves readability */
+        .fadeInUp {
+            animation-name: fadeInUp;
         }
 
-        footer .social-icons {
-            margin-top: 10px;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
         }
 
-        footer .social-icons a {
-            margin: 0 10px;
-            font-size: 18px;
-            color: #6c757d;
-            transition: color 0.3s ease;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
 
-        footer .social-icons a:hover {
-            color: #007bff;
-            /* Matches link hover color */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
         }
 
-
-        .custom-width {
-            width: 80%;
-            /* Adjust this percentage as needed */
-            margin: 0 auto;
-            /* Center the card */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
-
-        /* Media Query for Mobile Devices */
+        /* Media Queries */
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-                align-items: flex-start;
+                text-align: center;
+                padding: 15px;
             }
 
             .header h2 {
-                font-size: 1.5rem;
-            }
-
-            .home-button {
-                font-size: 14px;
-                padding: 8px 16px;
-                margin-top: 10px;
-            }
-
-            h1 {
                 font-size: 2rem;
             }
 
-            h2 {
+            .home-button {
+                margin-top: 10px;
+                display: block;
+                width: 100%;
+            }
+
+            .card-header h3 {
                 font-size: 1.5rem;
             }
 
-            .card {
-                padding: 15px;
-            }
-
-            .table th,
-            .table td {
+            .table-container {
                 padding: 10px;
-                font-size: 0.875rem;
             }
 
-            #ratingPieChartQ1,
-            #ratingPieChartQ2 {
-                max-width: 250px;
-                max-height: 250px;
-            }
-
-            .rating-distribution {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .rating-distribution ul {
-                width: 100%;
-            }
-
-            .rating-distribution li {
-                text-align: center;
-            }
-
-            .scrollable {
-                max-height: 300px;
-            }
-
-            /* Adjust card header and body padding for better mobile view */
-            .card-header {
-                padding: 10px 15px;
-                font-size: 1.25rem;
-                align-items: center;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .badge-info {
-                font-size: 0.75rem;
-            }
-
-            /* Specific styles for remark content on mobile */
-            .course-section {
-                margin-bottom: 20px;
-            }
-
-            .course-name {
-                font-size: 1.25rem;
-            }
-
-            .scrollable p {
+            .table th, .table td {
                 font-size: 0.9rem;
             }
 
-            .scrollable hr {
-                margin: 8px 0;
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.375rem 0.75rem;
             }
+        }
 
-            /* Specific styles for graph containers on mobile */
-            .col-md-6 {
-                width: 100%;
-                padding: 0;
-            }
-
-            .card {
-                margin-bottom: 20px;
-            }
-
-            .card h4 {
-                font-size: 1.25rem;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .ml-2 {
-                margin-left: -1.5rem !important;
-            }
-
-            footer {
+        @media (max-width: 576px) {
+            .container {
                 padding: 10px;
-                /* background-color: black; */
-            }
-            .table-container{
-                width: 175%;
             }
 
+            .header h2 {
+                font-size: 1.8rem;
+            }
+
+            .card-header h3 {
+                font-size: 1.3rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table th, .table td {
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+            }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
     <div class="container">
-        <div class="header">
-            <h2>Teacher Portal</h2>
-            <a href="/logout" class="home-button">logout</a>
+        <div class="header d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <h2><i class="fas fa-chalkboard-teacher mr-2"></i>Teacher Portal</h2>
+            <a href="/logout" class="home-button mt-3 mt-md-0"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
         </div>
-        <h2>Hi, {{ user_info.name.split()[0] }}!</h2>
 
-        <div class="card mb-4">
+        <div class="card animated fadeInUp">
             <div class="card-body">
-                <h3>Feedback Questions</h3>
-                <p>Question 1: How well did you understand the concepts covered this week?</p>
-                <p>Question 2: How well are you able to solve the given practice problems?</p>
+                <h3><i class="fas fa-user mr-2"></i>Welcome, {{ user_info.name.split()[0] }}!</h3>
             </div>
         </div>
 
-        <div class="table-container">
-            <h2 class="text-center" style="padding-bottom: 10px;">Feedback Summary</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Course Name</th>
-                        <th>Date</th>
-                        <th>Week</th>
-                        <th>Q1 Avg Rating</th>
-                        <th>Q2 Avg Rating</th>
-                        <th>Feedback Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for course, data in course_summaries.items() %}
-                    {% for week, avg_ratings in data.avg_ratings.items() %}
-                    <tr>
-                        <td>{{ data.course_name }}</td>
-                        <td>{{ data.latest_date }}</td>
-                        <td>{{ week }}</td>
-                        <td>{{ avg_ratings[0]|round(2) }}</td>
-                        <td>{{ avg_ratings[1]|round(2) }}</td>
-                        <td>{{ avg_ratings[2] }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="card animated fadeInUp">
+            <div class="card-header">
+                <h3><i class="fas fa-question-circle mr-2"></i>Feedback Questions</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Question 1:</strong> How well did you understand the concepts covered this week?</p>
+                <p><strong>Question 2:</strong> How well are you able to solve the given practice problems?</p>
+            </div>
         </div>
 
-        <div class="col-md-12">
-            <div class="card">
-                <h2 style="color: #007bff; text-align: center;">Ratings Overview for the Last Two Weeks</h2>
+        <div class="table-container animated fadeInUp">
+            <h2 class="text-center mb-4"><i class="fas fa-chart-bar mr-2"></i>Feedback Summary</h2>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>Date</th>
+                            <th>Week</th>
+                            <th>Q1 Avg Rating</th>
+                            <th>Q2 Avg Rating</th>
+                            <th>Feedback Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course, data in course_summaries.items() %}
+                        {% for week, avg_ratings in data.avg_ratings.items() %}
+                        <tr>
+                            <td>{{ data.course_name }}</td>
+                            <td>{{ data.latest_date }}</td>
+                            <td>{{ week }}</td>
+                            <td>{{ avg_ratings[0]|round(2) }}</td>
+                            <td>{{ avg_ratings[1]|round(2) }}</td>
+                            <td>{{ avg_ratings[2] }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card animated fadeInUp">
+            <div class="card-header">
+                <h2 class="text-center"><i class="fas fa-chart-pie mr-2"></i>Ratings Overview for the Last Two Weeks</h2>
+            </div>
+            <div class="card-body">
                 {% for course, data in course_summaries.items() %}
-                <div class="row" style="justify-content: center;">
-                    <div class="col-md-6" style="max-width: 43%">
-                        <div class="card">
-                            <h4>{{ data.course_name }}</h4>
-                            <h4> Question 1</h4>
-                            <canvas id="ratingPieChartQ1_{{ course }}"></canvas>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>{{ data.course_name }} - Question 1</h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ratingPieChartQ1_{{ course }}"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6" style="max-width: 43%">
-                        <div class="card">
-                            <h4>{{ data.course_name }}</h4>
-                            <h4> Question 2</h4>
-                            <canvas id="ratingPieChartQ2_{{ course }}"></canvas>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>{{ data.course_name }} - Question 2</h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ratingPieChartQ2_{{ course }}"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -595,14 +287,14 @@
             </div>
         </div>
 
-        <h2 class="text-center" style="padding-bottom: 10px;">Course-wise Individual Feedback</h2>
+        <h2 class="text-center mb-4"><i class="fas fa-comments mr-2"></i>Course-wise Individual Feedback</h2>
         {% for course, data in course_summaries.items() %}
-        <div class="table-container">
-            <h2 class="text-center" style="padding-bottom: 37px"> {{ data.course_name }} </h2>
+        <div class="table-container animated fadeInUp">
+            <h3 class="text-center mb-4">{{ data.course_name }}</h3>
             <div class="filter-container mb-3">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="min-rating-{{ course }}"> Rating:</label>
+                    <div class="col-md-4 mb-3">
+                        <label for="min-rating-{{ course }}"><i class="fas fa-star mr-2"></i>Rating:</label>
                         <select id="min-rating-{{ course }}" class="form-control">
                             <option value="">All Ratings</option>
                             <option value="1">1</option>
@@ -612,15 +304,15 @@
                             <option value="5">5</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label for="week-filter-{{ course }}">Week:</label>
+                    <div class="col-md-4 mb-3">
+                        <label for="week-filter-{{ course }}"><i class="fas fa-calendar-week mr-2"></i>Week:</label>
                         <select id="week-filter-{{ course }}" class="form-control">
                             <option value="">All Weeks</option>
                             <!-- Weeks will be populated dynamically -->
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label for="remarks-filter-{{ course }}">Remarks:</label>
+                    <div class="col-md-4 mb-3">
+                        <label for="remarks-filter-{{ course }}"><i class="fas fa-comment mr-2"></i>Remarks:</label>
                         <select id="remarks-filter-{{ course }}" class="form-control">
                             <option value="">All</option>
                             <option value="with-remarks">With Remarks</option>
@@ -629,48 +321,50 @@
                     </div>
                 </div>
             </div>
-            <table id="feedback-table-{{ course }}" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Week</th>
-                        <th>Q1 Rating</th>
-                        <th>Q2 Rating</th>
-                        <th>Remarks</th>
-                        <th>Send Message</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in feedback_data %}
-                    {% if row[0] == course %}
-                    <tr>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] if row[4] is not none else 0 }}</td>
-                        <td>{{ row[5] if row[5] is not none else 0 }}</td>
-                        <td>{{ row[6] }}</td>
-                        <td>
-                            <a href="mailto:{{ row[7] }}?subject=Feedback&body=Dear Student," class="btn btn-primary">
-                                Message
-                            </a>
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="feedback-table-{{ course }}" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Week</th>
+                            <th>Q1 Rating</th>
+                            <th>Q2 Rating</th>
+                            <th>Remarks</th>
+                            <th>Send Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in feedback_data %}
+                        {% if row[0] == course %}
+                        <tr>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] if row[4] is not none else 0 }}</td>
+                            <td>{{ row[5] if row[5] is not none else 0 }}</td>
+                            <td>{{ row[6] }}</td>
+                            <td>
+                                <a href="mailto:{{ row[7] }}?subject=Feedback&body=Dear Student," class="btn btn-primary btn-sm">
+                                    <i class="fas fa-envelope mr-2"></i>Message
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         {% endfor %}
     </div>
-    
-     <footer>
-         <div class="footer text-center text-lg-start mt-5">
-        <p>© 2024 Sitare University. All rights reserved.</p>
-        <span>Temporary Campus: SRMCEM Lucknow, India</span>
+
+    <footer class="bg-light text-center text-lg-start mt-5 py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Sitare University. All rights reserved.</p>
+            <p class="mb-0"><i class="fas fa-map-marker-alt mr-2"></i>Temporary Campus: SRMCEM Lucknow, India</p>
+        </div>
     </footer>
-    
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
@@ -804,6 +498,7 @@
             {% endfor %}
     
             fetchData();
+            
         });
     </script>    
 </body>

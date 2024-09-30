@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Feedback Management System - Sitare University</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS for the header/navbar */
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
         .header {
             background-image: linear-gradient(to bottom, #f2f2f2, #cccccc);
             padding: 8px;
@@ -15,24 +19,20 @@
             top: 0;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             z-index: 1000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .header img {
             height: 94px;
-            /* Set the height of the logo */
-            /* max-width: 100%; */
-            /* Ensure the logo doesn't exceed its container width */
         }
 
         .header h3 {
-            font-family: 'Montserrat', sans-serif;
             font-size: 36px;
             color: black;
             font-weight: bold;
-            margin-left: 15vw;
+            margin-left: 17vw;
         }
 
         .navbar-nav {
@@ -42,38 +42,28 @@
         }
 
         .nav-link {
-            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
-            /* Relative font size */
             color: #333;
-            /* Text color */
             padding: 0.625em 1em;
-            /* Relative padding */
-            transition: color 0.3s, background-color 0.3s;
-            /* Smooth transition for color and background */
+            transition: all 0.3s ease;
             border-radius: 0.3125em;
-            /* Relative border radius */
             text-decoration: none;
-            /* No underline */
             display: inline-block;
-            /* Better for alignment with text and other inline elements */
-            box-sizing: border-box;
-            /* Include padding and border in element’s total width and height */
         }
 
-        /* Hover effect */
         .nav-link:hover {
             background-color: #e0e0e0;
-            /* Light background on hover */
             color: #000;
-            /* Darker text color on hover */
+            transform: translateY(-2px);
         }
 
         .slideshow-container {
-            max-width: 1000px;
+            max-width: 1200px;
+            margin: 2rem auto;
             position: relative;
-            margin: 22px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .mySlides {
@@ -82,8 +72,7 @@
 
         .mySlides img {
             width: 100%;
-            border-radius: 10px;
-            height: 600px;
+            height: 500px;
             object-fit: cover;
         }
 
@@ -98,15 +87,16 @@
             color: white;
             font-weight: bold;
             font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
             user-select: none;
             background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 0 3px 3px 0;
         }
 
-        a[href="/login"] {
+        a:not([href]):not([tabindex]) {
+            color: white;
             text-decoration: none;
         }
-
 
         .next {
             right: 0;
@@ -118,74 +108,70 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .text {
-            color: #f2f2f2;
-            font-size: 15px;
-            padding: 8px 12px;
-            position: absolute;
-            bottom: 8px;
-            width: 100%;
-            text-align: center;
-        }
-
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            padding: 1.25rem;
+            /* Use rem for scalable padding */
+            margin-top: 1.25rem;
+            /* Margin in rem for better scalability */
+            margin-left: 1.25rem;
+            /* Scalable margin */
+            width: 100%;
+            /* Ensure full width on small screens */
+            max-width: 1200px;
+            /* Set a max width to keep it contained on larger screens */
         }
 
         .btn-77 {
             display: flex;
             align-items: center;
-            border: 1px solid #ccc;
-            padding: 10px 20px;
-            border-radius: 40px;
-            background-color: #d3cccc;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            background: #2c3e50;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.125rem;
+            border: none;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 263px;
+            margin-left: 130px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
             text-decoration: none;
-            outline: none;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .btn-77:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-77:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         .btn-77 img {
-            margin-right: 10px;
-        }
-
-        .numbertext {
-            color: #f2f2f2;
-            font-size: 12px;
-            padding: 8px 12px;
-            position: absolute;
-            top: 0;
+            margin-right: 12px;
+            width: 28px;
+            height: 28px;
         }
 
         .footer {
             text-align: center;
             margin-top: 50px;
             padding: 20px;
-            background-color: #f2f2f2;
-        }
-
-        .footer p,
-        .footer span {
-            margin: 0;
+            background-color: #2c3e50;
+            color: white;
         }
 
         .dot {
-            height: 15px;
-            width: 15px;
-            margin: 0 2px;
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
             background-color: #bbb;
             border-radius: 50%;
             display: inline-block;
@@ -197,43 +183,9 @@
             background-color: #717171;
         }
 
-        /* Media Queries for mobile devices */
         @media (max-width: 1024px) {
             .header {
-                padding: 10px;
-                box-shadow: none;
-                background-image: linear-gradient(to bottom, #f2f2f2, #e0e0e0);
-            }
-
-            .header img {
-                height: 80px;
-            }
-
-            .header h3 {
-                font-size: 32px;
-                margin-left: 10vw;
-            }
-
-            .navbar-nav {
-                margin-right: 10px;
-            }
-
-            .nav-link {
-                font-size: 17px;
-                padding: 9px 13px;
-            }
-
-            .footer {
-                padding: 18px;
-                font-size: 15px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: center;
-                padding: 10px;
+                padding: 12px 20px;
             }
 
             .header img {
@@ -242,250 +194,190 @@
 
             .header h3 {
                 font-size: 28px;
+                margin-left: 5vw;
+            }
+
+            .navbar-nav {
+                margin-right: 15px;
+            }
+
+            .nav-link {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+
+            .slideshow-container {
+                max-width: 90%;
+            }
+
+            .mySlides img {
+                height: 400px;
+            }
+
+            .btn-77 {
+                max-width: 240px;
+                font-size: 16px;
+                padding: 12px 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px 10px;
+            }
+
+            .header img {
+                height: 60px;
+                margin-bottom: 10px;
+            }
+
+            .header h3 {
+                font-size: 22px;
                 margin-left: 0;
                 text-align: center;
+                margin-bottom: 10px;
             }
 
             .navbar-nav {
                 margin-right: 0;
-                flex-direction: column;
-                align-items: center;
-                padding: 10px 0;
+                margin-top: 10px;
             }
 
-            .nav-link-button {
-                padding: 15px 30px;
-                font-size: 20px;
-                cursor: pointer;
-                border: none;
-                border-radius: 50px;
-                background-color: #ff6f61;
-                color: white;
-                transition: all 0.4s ease;
-                text-decoration: none;
-                /* Remove underline */
-                display: inline-block;
-                text-align: center;
-                width: 80%;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-
-            .nav-link-button:hover {
-                background-color: #ff9e80;
-                transform: scale(1.05);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            }
-
-            .nav-link-button:active {
-                background-color: #ff6f61;
-                transform: scale(0.98);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-
-            .slideshow-container {
-                max-width: 100%;
-                margin: 10px auto;
-                box-shadow: none;
+            .nav-link {
+                font-size: 15px;
+                padding: 8px 12px;
             }
 
             .mySlides img {
-                height: auto;
-                border-radius: 5px;
-                object-fit: cover;
+                height: 350px;
+            }
+
+            .btn-77 {
+                max-width: 220px;
+                font-size: 15px;
+                padding: 10px 20px;
+                margin-left: 44px;
+            }
+
+            .container {
+                margin-left: 0;
+                padding: 15px;
             }
 
             .prev,
             .next {
-                padding: 10px;
-                font-size: 14px;
-            }
-
-            .container {
-                flex-direction: column;
-                padding: 15px;
-                margin-top: 10px;
-            }
-
-            .btn-77 {
-                width: 100%;
                 padding: 12px;
                 font-size: 16px;
-                justify-content: center;
-            }
-
-            .footer {
-                padding: 15px;
-                font-size: 14px;
             }
 
             .dot {
                 height: 10px;
                 width: 10px;
+                margin: 0 4px;
             }
         }
 
         @media (max-width: 480px) {
             .header {
-                padding: 12px;
-                background-color: #ffffff;
-                /* Clean white background */
+                padding: 10px;
+                background-color: #f8f9fa;
                 border-bottom: 1px solid #e0e0e0;
-                /* Subtle border */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                /* Soft shadow for depth */
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                /* Space between items */
-                border-radius: 8px;
-                margin: 0 10px;
             }
 
             .header img {
-                height: 40px;
-                /* Larger logo for better visibility */
-                border-radius: 10%;
-                /* Circular logo */
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                /* Subtle shadow */
-                margin-right: 10px;
-                /* Space between logo and text */
+                height: 45px;
             }
 
             .header h3 {
-                font-size: 17px;
-                /* Adjusted font size */
-                color: #333;
-                /* Darker text for contrast */
-                font-weight: bold;
-                margin: 0;
-                /* Remove margin for alignment */
-                text-align: center;
-                flex-grow: 1;
-                /* Allow the heading to grow and center */
+                font-size: 18px;
+                margin-bottom: 8px;
             }
 
             .navbar-nav {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 10px 0;
                 width: 100%;
-                /* Full width for better touch targets */
-            }
-
-            .nav-link {
-                font-size: 16px;
-                /* Adjusted font size */
-                color: #007bff;
-                /* Link color */
-                padding: 8px 15px;
-                /* Padding for clickable area */
-                border-radius: 20px;
-                /* Rounded button */
-                text-decoration: none;
-                background-color: #f8f9fa;
-                /* Background for better visibility */
-                transition: background-color 0.3s, color 0.3s;
-                display: block;
-                /* Block display for full-width buttons */
-                margin-bottom: 8px;
-                /* Space between links */
-            }
-
-            .nav-link:hover {
-                background-color: #e2e6ea;
-                /* Hover effect */
-                color: #0056b3;
-                /* Darker text on hover */
-            }
-
-            .btn-77 {
-                padding: 12px;
-                font-size: 16px;
-                border: none;
-                background-color: #007bff;
-                /* Primary button color */
-                color: #fff;
-                border-radius: 25px;
-                /* Rounded button */
-                text-align: center;
-                transition: background-color 0.3s;
-                display: inline-flex;
-                align-items: center;
+                flex-direction: row;
                 justify-content: center;
             }
 
-            .btn-77:hover {
-                background-color: #0056b3;
-                /* Darker button color on hover */
+            .nav-link {
+                font-size: 14px;
+                padding: 6px 10px;
+                margin: 0 5px;
+            }
+
+            .mySlides img {
+                height: 200px;
+            }
+
+            .prev,
+            .next {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .btn-77 {
+                max-width: 200px;
+                font-size: 14px;
+                padding: 10px 18px;
+            }
+
+            .btn-77 img {
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
             }
 
             .footer {
-                padding: 15px;
-                font-size: 14px;
-                text-align: center;
-                background-color: #f8f9fa;
-                /* Light background for footer */
-                border-top: 1px solid #e0e0e0;
-                /* Top border */
+                padding: 12px;
+                font-size: 11px;
             }
 
             .dot {
                 height: 8px;
                 width: 8px;
+                margin: 0 3px;
+            }
+        }
+
+        /* Add smooth transitions for a more polished feel */
+        @media (prefers-reduced-motion: no-preference) {
+            * {
+                transition: all 0.3s ease;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
     <div class="header">
         <div class="d-flex align-items-center logo">
             <img src="./static/Sitare-University-Logo.webp" alt="Logo">
-            <h3>Feedback Management System</h3>
+            <h3>Feedback Management Portal</h3>
         </div>
         <ul class="navbar-nav ml-auto">
             <li>
-                <button style="border-radius:12%">
-                    <a class="nav-link" href="/about_us">About Us</a>
-                </button>
+                <a class="nav-link" href="/about_us">About Us</a>
             </li>
         </ul>
     </div>
 
-    <!-- Slideshow -->
     <div class="slideshow-container">
         <div class="mySlides">
-            <div class="numbertext">1 / 5</div>
-            <img src="./static/slides(1).jpg"
-                alt="University Group Photo">
-            <!-- <div class="text">University Group Photo</div> -->
+            <img src="./static/slides(1).jpg" alt="University Group Photo">
         </div>
         <div class="mySlides">
-            <div class="numbertext">2 / 5</div>
-            <img src="./static/slides(2).jpg"
-                alt="Batch(2023-2027)">
-            <!-- <div class="text">Batch(2023-2027)</div> -->
+            <img src="./static/slides(2).jpg" alt="Batch(2023-2027)">
         </div>
         <div class="mySlides">
-            <div class="numbertext">3 / 5</div>
-            <img src="./static/slides(3).jpg"
-                alt="Batch(2023-2027)">
-            <!-- <div class="text">Batch(2023-2027)</div> -->
+            <img src="./static/slides(3).jpg" alt="Batch(2023-2027)">
         </div>
         <div class="mySlides">
-            <div class="numbertext">4 / 5</div>
-            <img src="./static/slides(4).jpg"
-                alt="Semester End photo">
-            <!-- <div class="text">Semester End photo</div> -->
+            <img src="./static/slides(4).jpg" alt="Semester End photo">
         </div>
         <div class="mySlides">
-            <div class="numbertext">5 / 5</div>
-            <img src="./static/slides(5).jpg"
-                alt="Semester End photo">
-            <!-- <div class="text">Semester End photo</div> -->
+            <img src="./static/slides(5).jpg" alt="Semester End photo">
         </div>
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -499,45 +391,42 @@
         <span class="dot" onclick="currentSlide(5)"></span>
     </div>
 
-    <!-- Login Form -->
     <div class="container">
-        <a href="/login">
-            <button class="w-full flex items-center btn-77 border py-2 rounded-md hover:bg-muted/20 href=" /login"">
-                <img src="./static/google-icon.png" width="40px" alt="Google logo" class="mr-2">
+        <a href="/login" style="text-decoration: none; width: 100%; max-width: 300px;">
+            <button class="btn-77">
+                <img src="./static/google-icon.png" alt="Google logo" class="mr-2">
                 Login with Google
             </button>
         </a>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="footer text-center text-lg-start mt-5">
-        <p>© 2024 Sitare University. All rights reserved.</p>
-        <span>Temporary Campus: SRMCEM Lucknow, India</span>
+            <p>© 2024 Sitare University. All rights reserved.</p>
+            <span>Temporary Campus: SRMCEM Lucknow, India</span>
+        </div>
     </footer>
 
     <script>
         let slideIndex = 0;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("dot");
+        showSlides();
 
         function showSlides() {
+            let slides = document.getElementsByClassName("mySlides");
             for (let i = 0; i < slides.length; i++) {
                 slides[i].style.display = "none";
             }
             slideIndex++;
             if (slideIndex > slides.length) { slideIndex = 1 }
             slides[slideIndex - 1].style.display = "block";
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            dots[slideIndex - 1].className += " active";
-            setTimeout(showSlides, 3000); // Change image every 3 seconds
+            setTimeout(showSlides, 6000);
         }
 
-        showSlides();
+        function plusSlides(n) {
+            slideIndex += n - 1;
+            showSlides();
+        }
     </script>
-
 </body>
 
 </html>
