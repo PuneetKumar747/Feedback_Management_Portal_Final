@@ -76,14 +76,18 @@
             margin-top: 30px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
         }
+
 
         /* Group buttons */
         .btn-group a {
             margin: 0 10px;
         }
 
-        /* Position Home Button on the top-right corner */
         .home-btn {
             position: absolute;
             top: 20px;
@@ -103,7 +107,9 @@
             border: 5px solid #f8f9fa;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             border-radius: 15px;
+            margin-bottom: 20px; /* Add some space below the image */
         }
+
 
         .profile-card:hover img {
             transform: scale(1.05);
