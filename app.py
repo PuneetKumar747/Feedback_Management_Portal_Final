@@ -139,7 +139,7 @@ def student_portal():
     # code for submitting the data on saturday
 
     current_day = datetime.now(timezone.utc).weekday()
-    is_saturday = (current_day == 5)
+    is_saturday = (current_day == 4 or current_day == 5)
 
     # # code for submitting the data one time in a day
 
