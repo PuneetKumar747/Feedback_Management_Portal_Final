@@ -390,7 +390,7 @@
             var fillFormButton = document.getElementById("fillFormButton");
             var formAvailabilityMessage = document.getElementById("formAvailabilityMessage");
 
-            if (dayOfWeek === 6) { // 6 corresponds to Saturday
+            if (dayOfWeek === 5 || dayOfWeek === 6) { // 6 corresponds to Saturday and 5 corresponds to friday
                 fillFormButton.style.display = "block";
                 formAvailabilityMessage.textContent = "The feedback form is available today (Saturday). Don't miss this opportunity to share your thoughts!";
             } else {
