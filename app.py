@@ -144,7 +144,7 @@ def student_portal():
     if not user_info or not re.match(r'^su-.*@sitare\.org$', user_info['email']):
         return redirect(url_for('login'))
     
-   current_day = datetime.now(timezone.utc).weekday()
+    current_day = datetime.now(timezone.utc).weekday()
     is_saturday = (current_day == 4 or current_day == 5)
 
     # code for submitting the data one time in a day
