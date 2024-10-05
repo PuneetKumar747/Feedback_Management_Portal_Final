@@ -674,7 +674,7 @@ def submit_all_forms():
         print(error_details)  # Debugging line
         return jsonify({"status": "error", "message": error_details}), 500
 
-@app.route('/Redirect_page')
+@app.route('/redirect_page')
 def redirect_page():
     feedback_status = request.args.get('feedback_status', 'not_submitted')
     return render_template('redirect_page.html', feedback_status=feedback_status)
