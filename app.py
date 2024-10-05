@@ -1,16 +1,14 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
+import os
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import psycopg2
 from collections import defaultdict
-import os
 import re
 import secrets
 from authlib.integrations.flask_client import OAuth
 from datetime import datetime, timedelta, timezone
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import schedule
-import threading
+import logging
+import sys
+from logging import Formatter
 import time 
 from dotenv import load_dotenv 
 
@@ -58,8 +56,18 @@ def get_db_connection():
         print("Database connection established.")
         return conn
     except psycopg2.Error as e:
-        print("Error connecting to the database:", str(e))
+        app.logger.error(f"Database connection error: {str(e)}")
         return None
+
+# Set up logging to stderr
+def log_to_stderr(app):
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]'
+    ))
+    handler.setLevel(logging.WARNING)  # Set log level
+    app.logger.addHandler(handler)
 
 @app.route('/')
 def home():
@@ -74,7 +82,6 @@ def login():
     session.pop('user_info', None)
     session.pop('token', None)
     session.pop('nonce', None)
-    # print("Session cleared. Redirecting to Google for authentication.")
     redirect_uri = url_for('authorize', _external=True)
     nonce = secrets.token_urlsafe(16)
     state = secrets.token_urlsafe(16)
@@ -91,22 +98,19 @@ def authorize():
 
     if user_info:
         email = user_info['email']
-        name = user_info.get('name', 'User')  # Use 'User' as a default name if not present
+        name = user_info.get('name', 'User')
         session['user_info'] = {'email': email, 'name': name}
-        # print("User authorized:", user_info)
 
         if re.match(r'^su-.*@sitare\.org$', email):
             return redirect(url_for('dashboard'))
-        elif re.match(r'^[a-zA-Z0-9._%+-]+@sitare\.org$', user_info['email']):
-        # elif re.match(r'^(kpuneet474@gmail\.com|^[a-zA-Z0-9._%+-]+@sitare\.org)$', user_info['email']):
+        elif re.match(r'^(kpuneet474@gmail\.com)$', user_info['email']):
             return redirect(url_for('teacher_portal'))
-        elif re.match(r'^admin@sitare\.org$', email):
+        elif re.match(r'^kronit747@gmail\.com$', email):
             return redirect(url_for('admin_portal'))
         else:
-            # print("Invalid email format:", email)
-            return "Sorry! Login with Sitare Email id", 400
+            return render_template('unauthorized.html'), 400
     else:
-        # print("Authorization failed.")
+    
         return "Authorization failed", 400
 
 @app.route('/dashboard')
@@ -123,39 +127,26 @@ def dashboard():
     elif re.match(r'^admin@sitare\.org$', email):
         return redirect(url_for('admin_portal'))
     else:
-        return "Invalid user role", 400
+        # Redirect to error page for unexpected behavior or invalid roles
+        return render_template('error.html'), 400
 
+@app.route('/logout')
+def logout():
+    session.pop('user_info', None)
+    session.pop('token', None)
+    session.pop('nonce', None)
+    print("User logged out. Session cleared.")
+    return redirect(url_for('home'))
 
 @app.route('/student_portal')
 def student_portal():
-    create_tables_if_not_exists()
     user_info = session.get('user_info')
-    print("Accessing student portal for user:", user_info)
-
     if not user_info or not re.match(r'^su-.*@sitare\.org$', user_info['email']):
-        print("User not authorized for student portal. Redirecting to login.")
         return redirect(url_for('login'))
     
-    # code for submitting the data on saturday
-
     current_day = datetime.now(timezone.utc).weekday()
     is_saturday = (current_day == 4 or current_day == 5)
-
-    # # code for submitting the data one time in a day
-
-    student_email_id = user_info.get('email')
-    current_datetime = datetime.now(timezone.utc)
-    current_date = current_datetime.date()
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
-    feedback_submitted = cursor.fetchone()
-
-    if feedback_submitted:
-        return render_template('student_portal.html', user_info=user_info, feedback_submitted=True)
-
-    # Determine batch pattern (e.g., su-230, su-220)
+    
     email = user_info.get('email')
     batch_pattern = None
     if re.match(r'^su-230.*@sitare\.org$', email):
@@ -165,31 +156,34 @@ def student_portal():
     elif re.match(r'^su-24.*@sitare\.org$', email):
         batch_pattern = 'su-24'
 
-    # Fetch courses and instructor emails from the database
     conn = get_db_connection()
-    cursor = conn.cursor()
+    if conn:
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    SELECT courses.course_id, courses.course_name, instructors.instructor_name, instructors.instructor_email 
+                    FROM courses
+                    JOIN instructors ON courses.instructor_id = instructors.instructor_id
+                    WHERE courses.batch_pattern = %s
+                """, (batch_pattern,))
+                course_data = cursor.fetchall()
 
-    # Fetch courses for the given batch pattern
-    cursor.execute("""
-        SELECT courses.course_id, courses.course_name, instructors.instructor_name, instructors.instructor_email 
-        FROM courses
-        JOIN instructors ON courses.instructor_id = instructors.instructor_id
-        WHERE courses.batch_pattern = %s
-    """, (batch_pattern,))
-    course_data = cursor.fetchall()
+            courses = []
+            instructor_emails = {}
 
-    courses = []
-    instructor_emails = {}
+            for course_id, course_name, instructor_name, instructor_email in course_data:
+                courses.append({"course_id": course_id, "course_name": f"{course_name}: {instructor_name}"})
+                instructor_emails[course_id] = instructor_email
 
-    for course_id, course_name, instructor_name, instructor_email in course_data:
-        courses.append({"course_id": course_id, "course_name": f"{course_name}: {instructor_name}"})
-        instructor_emails[course_id] = instructor_email
-
-    session['instructor_emails'] = instructor_emails
-    print("Instructor emails:", instructor_emails)
-
-    # return render_template('student_portal.html', user_info=user_info, courses=courses)
-    return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
+            session['instructor_emails'] = instructor_emails
+            return render_template('student_portal.html', is_saturday=is_saturday, user_info=user_info, courses=courses)
+        except psycopg2.Error as e:
+            app.logger.error(f"Database error in student_portal: {str(e)}")
+            return "An error occurred", 500
+        finally:
+            conn.close()
+    else:
+        return "Database connection failed", 500
 
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
@@ -448,13 +442,7 @@ def admin_portal():
     return render_template('admin_portal.html', user_info=user_info, feedback_data_by_email=feedback_data_by_email, avg_ratings_by_email=avg_ratings_by_email, instructor_names=instructor_names)
 
 
-@app.route('/logout')
-def logout():
-    session.pop('user_info', None)
-    session.pop('token', None)
-    session.pop('nonce', None)
-    print("User logged out. Session cleared.")
-    return redirect(url_for('home'))
+
 
 @app.route('/get_form/<course_id>')
 def get_form(course_id):
@@ -690,67 +678,13 @@ def submit_all_forms():
 def redirect_page():
     feedback_status = request.args.get('feedback_status', 'not_submitted')
     return render_template('redirect_page.html', feedback_status=feedback_status)
-
-def send_email():
-    sender_email = "su-23028@sitare.org"
-    receiver_emails = ["su-students@sitare.org"]  # Receiver Email
-    subject = "Weekly Feedback"
     
-    # HTML formatted email body
-    body = """
-    <html>
-    <body style="font-family: Arial, sans-serif; color: #333333; margin: 0; padding: 0;">
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
-            <h2 style="color: #4CAF50; text-align: center;">Reminder for Feedback</h2>
-            <p style="font-size: 16px; line-height: 1.6;">
-                This is a quick reminder to complete this week's feedback. Your feedback is valuable and helps us improve your experience. We'd love to hear from you before the week ends.
-            </p>
-            <p style="font-size: 16px; line-height: 1.6;">
-                Take a moment to share your thoughts and let us know how we can continue to enhance your learning journey.
-            </p>
-            <p style="text-align: center;">
-                <a href="https://feedback-final-testing.onrender.com/" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Submit Feedback Now!</a>
-            </p>
-            <hr style="border: 0; border-top: 1px solid #dddddd;">
-            <p style="font-size: 14px; line-height: 1.6; text-align: left;">
-                <strong>Warm Regards,</strong><br>
-                Puneet Kr (2nd year)<br>
-                Feedback Management Team<br>
-                Sitare University
-            </p>
-        </div>
-    </body>
-    </html>
-    """
-
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'html'))
-
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    smtp_user = sender_email
-    smtp_password = "msjz ujvp iypk cawu"  # Use app-specific password for security
-
-    try:
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
-        server.login(smtp_user, smtp_password)
-        
-        # Send email to each recipient
-        for recipient_email in receiver_emails:
-            msg['To'] = recipient_email
-            server.sendmail(sender_email, recipient_email, msg.as_string())
-            print(f"Email sent to {recipient_email}")
-        
-        server.quit()
-    except Exception as e:
-        print(f"Failed to send email: {str(e)}")
-
-# Schedule the email to be sent every Friday at 14:15
-schedule.every().saturday.at("18:00").do(send_email)
-
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the error
+    app.logger.error(f"Unhandled exception: {str(e)}")
+    # Return a custom error page
+    return render_template('error.html')
 
 if __name__ == '__main__':
     get_db_connection()
@@ -758,31 +692,11 @@ if __name__ == '__main__':
     
     # Use the PORT from the environment or default to 5000
     port = int(os.environ.get('PORT', 5000))
+    log_to_stderr(app)
     
     # Start the Flask application
     app.run(host='0.0.0.0', port=port)
 
-    # Start the scheduling thread
-    def run_schedule():
-        while True:
-            schedule.run_pending()
-            time.sleep(60)  # Check every minute
 
-    schedule_thread = threading.Thread(target=run_schedule)
-    schedule_thread.start()
-
-# Run the scheduling loop
-# while True:
-#     schedule.run_pending()
-#     time.sleep(60)  # Wait a minute before checking again
-
-# if __name__ == '__main__':
-#     get_db_connection()
-#     create_tables_if_not_exists()
-#     port = int(os.environ.get('PORT', 5000))  # Use the PORT from the environment or default to 5000
-#     app.run(host='0.0.0.0', port=port)
-#     # port = int(os.environ.get('PORT', 10000))
-#     # # app.run(host="0.0.0.0", port=port, debug=False)
-#     # app.run_server(debug=True, port=8050, host='0.0.0.0')
 
 
