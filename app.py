@@ -144,8 +144,19 @@ def student_portal():
     if not user_info or not re.match(r'^su-.*@sitare\.org$', user_info['email']):
         return redirect(url_for('login'))
     
-    current_day = datetime.now(timezone.utc).weekday()
+   current_day = datetime.now(timezone.utc).weekday()
     is_saturday = (current_day == 4 or current_day == 5)
+
+    # code for submitting the data one time in a day
+    student_email_id = user_info.get('email')
+    current_datetime = datetime.now(timezone.utc)
+    current_date = current_datetime.date()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM feedback WHERE studentEmaiID = %s AND DateOfFeedback = %s", (student_email_id, current_date))
+    feedback_submitted = cursor.fetchone()
+    if feedback_submitted:
+        return render_template('student_portal.html', user_info=user_info, feedback_submitted=True)
     
     email = user_info.get('email')
     batch_pattern = None
