@@ -145,7 +145,7 @@ def student_portal():
         return redirect(url_for('login'))
     
     current_day = datetime.now(timezone.utc).weekday()
-    is_saturday = (current_day == 4 or current_day == 5)
+    is_saturday = (current_day == 1 or current_day == 2)
 
     # code for submitting the data one time in a day
     student_email_id = user_info.get('email')
@@ -518,29 +518,32 @@ def create_tables_if_not_exists():
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
     (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
+    (15, 'Dr. Abhinav Mishra', 'abhinav@sitare.org')
+    (16, 'Dr. Ramesh Subramonian', 'ramesh.subramonian@sitare.org')
+    (17, 'Dr. Aniket Prabhune', 'aniket.prabhune@sitare.org')
+    (18, 'Dr. Sumeet Agrawal', 'sumeet@sitare.org')
     ON CONFLICT (instructor_id) DO NOTHING;
     """
-
+    
     # SQL to insert courses with conflict resolution
     insert_courses_query = """
     INSERT INTO courses (course_name, instructor_id, batch_pattern)
     VALUES
-    ('Artificial Intelligence', 1, 'su-230'),
-    ('DBMS', 1, 'su-230'),
-    ('ADSA', 2, 'su-230'),
-    ('Probability for CS', 2, 'su-230'),
-    ('Communication and Ethics (SEM 3)', 4, 'su-230'),
-    ('Java', 13, 'su-230'),
-    ('Book Club & SEI (SEM 3)', 14, 'su-230'),
-    ('Web Applications Development', 6, 'su-220'),
-    ('OS Principles', 8, 'su-220'),
-    ('Deep Learning', 9, 'su-220'),
-    ('Creative Problem Solving', 10, 'su-220'),
-    ('Communication and Ethics(SEM 1)', 4, 'su-24'),
-    ('Introduction to Computers', 3, 'su-24'),
-    ('Linear Algebra', 12, 'su-24'),
-    ('Programming Methodology in Python', 9, 'su-24'),
-    ('Book Club & SEI (SEM 1)', 14, 'su-24')
+    ('Search Engine and Information retrieval', 1, 'su-230'),
+    ('Mining Massive DataSets', 2, 'su-230'),
+    ('Computer Organisation & Systems', 9, 'su-230'),
+    ('Advanced Object Oriented Programming', 13, 'su-230'),
+    ('Book Club (SEM 4)', 4, 'su-230'),
+    ('Machine Learning', 9, 'su-230'),
+    ('Computer Networks', 16, 'su-220'),
+    ('Economics for CS', 5, 'su-220'),
+    ('Human Computer Interaction', 6, 'su-220'),
+    ('Communication and Ethics(SEM 2)', 4, 'su-24'),
+    ('Mathematical Foundation of Computing(MFC)', 9, 'su-24'),
+    ('Data Handling in Python(DHP)', 3, 'su-24'),
+    ('Data Structures & Algorithms', 13, 'su-24'),
+    ('Calculus', 15, 'su-24'),
+    ('Book Club & SEI (SEM 2)', 4, 'su-24')
     ON CONFLICT (course_name, instructor_id, batch_pattern) DO NOTHING;
     """
 
