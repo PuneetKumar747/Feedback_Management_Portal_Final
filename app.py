@@ -517,10 +517,10 @@ def create_tables_if_not_exists():
     (8, 'Dr. Mainak', 'mainakc@sitare.org'),
     (7, 'Jeet Sir', 'jeet.mukherjee@sitare.org'),
     (6, 'Dr. Ambar Jain', 'ambar@sitare.org'),
-    (12, 'Dr. Shankho Pal', 'shankho@sitare.org')
-    (15, 'Dr. Abhinav Mishra', 'abhinav@sitare.org')
-    (16, 'Dr. Ramesh Subramonian', 'ramesh.subramonian@sitare.org')
-    (17, 'Dr. Aniket Prabhune', 'aniket.prabhune@sitare.org')
+    (12, 'Dr. Shankho Pal', 'shankho@sitare.org'),
+    (15, 'Dr. Abhinav Mishra', 'abhinav@sitare.org'),
+    (16, 'Dr. Ramesh Subramonian', 'ramesh.subramonian@sitare.org'),
+    (17, 'Dr. Aniket Prabhune', 'aniket.prabhune@sitare.org'),
     (18, 'Dr. Sumeet Agrawal', 'sumeet@sitare.org')
     ON CONFLICT (instructor_id) DO NOTHING;
     """
