@@ -6,8 +6,7 @@ import time
 
 def send_email():
     sender_email = "kpuneet474@gmail.com"
-    # receiver_emails = ["su-cof2027@sitare.org"]  # List of recipient emails
-    receiver_emails = ["su-cof2026@sitare.org"]  # List of recipient emails
+    receiver_emails = ["su-2308@sitare.org"]
     subject = "Weekly Reminder for feedback"
     body = "All students, please fill the feedback for all subjects."
 
@@ -26,7 +25,6 @@ def send_email():
         server.starttls()
         server.login(smtp_user, smtp_password)
         
-        # Send email to each recipient
         for recipient_email in receiver_emails:
             msg['To'] = recipient_email
             server.sendmail(sender_email, recipient_email, msg.as_string())
@@ -36,8 +34,9 @@ def send_email():
     except Exception as e:
         print(f"Failed to send email: {str(e)}")
 
-# Schedule the email to be sent every Monday at 10:48 AM
-schedule.every().monday.at("11:21").do(send_email)
+# Schedule the email to be sent every Monday at 11:21 AM
+# Additionally, check for pending tasks every 30 minutes
+schedule.every(30).minutes.do(send_email)
 
 # Run the scheduling loop
 while True:
