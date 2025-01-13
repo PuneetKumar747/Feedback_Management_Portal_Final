@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import schedule
 import time
+import os
 
 def send_email():
     sender_email = "kpuneet474@gmail.com"
@@ -17,8 +18,8 @@ def send_email():
 
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = sender_email
-    smtp_password = "jyrj qnay shxz cfov"  # Use app-specific password for security
+    smtp_user = os.getenv('SMTP_USER')
+    smtp_password = os.getenv('SMTP_PASSWORD')
 
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
