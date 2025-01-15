@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,6 +105,7 @@
                 opacity: 0;
                 transform: translate3d(0, 40px, 0);
             }
+
             to {
                 opacity: 1;
                 transform: translate3d(0, 0, 0);
@@ -162,7 +164,8 @@
                 padding: 10px;
             }
 
-            .table th, .table td {
+            .table th,
+            .table td {
                 font-size: 0.9rem;
             }
 
@@ -189,7 +192,8 @@
                 overflow-x: auto;
             }
 
-            .table th, .table td {
+            .table th,
+            .table td {
                 font-size: 0.8rem;
             }
 
@@ -200,11 +204,22 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header d-flex flex-column flex-md-row justify-content-between align-items-center">
             <h2><i class="fas fa-chalkboard-teacher mr-2"></i>Teacher Portal</h2>
-            <a href="/logout" class="home-button mt-3 mt-md-0"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+
+            <div class="d-flex align-items-center mt-3 mt-md-0">
+                {% if manage_courses %}
+                <a href="{{ url_for('course_manager') }}" class="btn btn-primary mr-3">
+                    <i class="fas fa-cogs mr-1"></i>Manage Courses
+                </a>
+                {% endif %}
+                <a href="/logout" class="home-button">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
         </div>
 
         <div class="card animated fadeInUp">
@@ -257,7 +272,8 @@
 
         <div class="card animated fadeInUp">
             <div class="card-header">
-                <h2 class="text-center"><i class="fas fa-chart-pie mr-2"></i>Ratings Overview for the Last Two Weeks</h2>
+                <h2 class="text-center"><i class="fas fa-chart-pie mr-2"></i>Ratings Overview for the Last Two Weeks
+                </h2>
             </div>
             <div class="card-body">
                 {% for course, data in course_summaries.items() %}
@@ -345,7 +361,8 @@
                             <td>{{ row[5] if row[5] is not none else 0 }}</td>
                             <td>{{ row[6] }}</td>
                             <td>
-                                <a href="mailto:{{ row[7] }}?subject=Feedback&body=Dear Student," class="btn btn-primary btn-sm">
+                                <a href="mailto:{{ row[7] }}?subject=Feedback&body=Dear Student,"
+                                    class="btn btn-primary btn-sm">
                                     <i class="fas fa-envelope mr-2"></i>Message
                                 </a>
                             </td>
@@ -373,7 +390,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const charts = {};
-    
+
             const fetchData = async () => {
                 try {
                     const response = await fetch('/teacher_portal?data=json');
@@ -385,21 +402,21 @@
                     alert('Failed to load data. Please try again later.');
                 }
             };
-    
+
             const renderCharts = (data) => {
                 for (const [course, courseData] of Object.entries(data)) {
                     createPieChart(`ratingPieChartQ1_${course}`, courseData.distribution_q1, `${course} - Question 1`);
                     createPieChart(`ratingPieChartQ2_${course}`, courseData.distribution_q2, `${course} - Question 2`);
                 }
             };
-    
+
             const createPieChart = (canvasId, distributionData, title) => {
                 const ctx = document.getElementById(canvasId).getContext('2d');
-    
+
                 if (charts[canvasId]) {
                     charts[canvasId].destroy();
                 }
-    
+
                 const ratingPieData = {
                     labels: ['1', '2', '3', '4', '5'],
                     datasets: [{
@@ -422,7 +439,7 @@
                         borderWidth: 1
                     }]
                 };
-    
+
                 const ratingPieOptions = {
                     responsive: true,
                     plugins: {
@@ -452,54 +469,55 @@
                                     // Format the tooltip label
                                     return `${students} students - ${rating} rating`;
                                 },
-                                title: function() {
+                                title: function () {
                                     return ''; // Hide the default title
                                 }
                             }
                         }
                     }
                 };
-    
+
                 charts[canvasId] = new Chart(ctx, {
                     type: 'pie',
                     data: ratingPieData,
                     options: ratingPieOptions
                 });
             };
-    
+
             {% for course, data in course_summaries.items() %}
             const table_{{ course }} = $('#feedback-table-{{ course }}').DataTable({
-                lengthMenu: [5, 10, 25, 50],
-                pageLength: 5,
-                responsive: true,
-            });
-    
-            $('#min-rating-{{ course }}').on('change', function () {
-                const rating = $(this).val();
-                table_{{ course }}.column(3).search(rating).draw();
-                table_{{ course }}.column(4).search(rating).draw();
-            });
-    
-            $('#week-filter-{{ course }}').on('change', function () {
-                const week = $(this).val();
-                table_{{ course }}.column(2).search(week).draw();
-            });
-    
-            $('#remarks-filter-{{ course }}').on('change', function () {
-                const remarksFilter = $(this).val();
-                if (remarksFilter === 'with-remarks') {
-                    table_{{ course }}.column(5).search('.+', true, false).draw();
-                } else if (remarksFilter === 'without-remarks') {
-                    table_{{ course }}.column(5).search('^$', true, false).draw();
-                } else {
-                    table_{{ course }}.column(5).search('').draw();
-                }
-            });
-            {% endfor %}
-    
-            fetchData();
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 5,
+            responsive: true,
+        });
+
+        $('#min-rating-{{ course }}').on('change', function () {
+            const rating = $(this).val();
+                table_{ { course } }.column(3).search(rating).draw();
+                table_{ { course } }.column(4).search(rating).draw();
+        });
+
+        $('#week-filter-{{ course }}').on('change', function () {
+            const week = $(this).val();
+                table_{ { course } }.column(2).search(week).draw();
+        });
+
+        $('#remarks-filter-{{ course }}').on('change', function () {
+            const remarksFilter = $(this).val();
+            if (remarksFilter === 'with-remarks') {
+                    table_{ { course } }.column(5).search('.+', true, false).draw();
+            } else if (remarksFilter === 'without-remarks') {
+                    table_{ { course } }.column(5).search('^$', true, false).draw();
+            } else {
+                    table_{ { course } }.column(5).search('').draw();
+            }
+        });
+        {% endfor %}
+
+        fetchData();
             
         });
-    </script>    
+    </script>
 </body>
-</html>    
+
+</html>

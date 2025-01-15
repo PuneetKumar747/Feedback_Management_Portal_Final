@@ -421,26 +421,24 @@
     </header>
     {% if feedback_submitted %}
     <div class="course-container">
-        <h2>You have already submitted your feedback today. Come back next Saturday!</h2>
+        <h2>You have already submitted your feedback. Come back next time!</h2>
     </div>
     {% else %}
     <div class="course-container">
         {% for course in courses %}
         <h2 class="course-header">{{ course.course_name }}</h2>
         <div id="form-container-{{ course.course_id }}" class="form-container">
-            <!-- {% include 'course_form.html' %} -->
+            <!-- Dynamic form content will be loaded here -->
         </div>
         {% endfor %}
     </div>
-    {% endif %}
-
-
     <div class="text-center mt-4">
         <button id="final-submit" class="btn btn-success">Submit All Forms</button>
     </div>
-    </div>
+    {% endif %}
+
     <div id="feedback-submitted-alert" class="alert alert-warning mt-4">
-        You have already submitted feedback today. see you soon on next Saturday.
+        feedback submitted successfully. Thank you!
     </div>
 
     <footer>
@@ -508,9 +506,14 @@
                                 this.reset();
                             });
 
+                            // Hide the submit button and show a message
+                            $("#final-submit").hide();
+                            $("#feedback-submitted-alert").text("Feedback submitted successfully. Thank you!").show();
+
                             // Redirect to the index page after success
                             window.location.href = "/redirect_page";
                         } else if (response.status === "already_submitted") {
+                            alert("You have already submitted feedback today.");
                             $("#feedback-submitted-alert").show();
                         } else {
                             alert("Please try again.");

@@ -389,12 +389,12 @@
             var dayOfWeek = today.getUTCDay();
             var fillFormButton = document.getElementById("fillFormButton");
             var formAvailabilityMessage = document.getElementById("formAvailabilityMessage");
-
-            if (dayOfWeek === 2 || dayOfWeek === 3) { // 6 corresponds to Saturday and 5 corresponds to friday
+            // redirect page 
+            if (dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 5) { // 6 corresponds to Saturday and 5 corresponds to friday and 0 for sunday
                 fillFormButton.style.display = "block";
                 formAvailabilityMessage.textContent = "The feedback form is available today. Don't miss this opportunity to share your thoughts!";
             } else {
-                formAvailabilityMessage.textContent = "The feedback form is only available on Friday & Saturday. Please check back on the weekend.";
+                formAvailabilityMessage.textContent = "The feedback form is only available on Friday,Saturday & Sunday. Please check that day!";
             }
         };
     </script>
