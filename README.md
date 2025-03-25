@@ -218,4 +218,4 @@ Contributions to improve the Sitare University Feedback System are welcome. Plea
 
 ## Contact
 
-For any queries or support, please contact [su-23003@sitare.org](mailto:su-23003@sitare.org).
+For any queries or support, please contact [su-23028@sitare.org](mailto:su-23003@sitare.org).
