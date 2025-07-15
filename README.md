@@ -196,7 +196,7 @@ while True:
 
 Note: Make sure to keep your app-specific password confidential and not commit it to version control. Consider using environment variables or a secure configuration file to store sensitive information.
 
-## 🖼️ Chatbot UI Screenshots
+## 🖼️ Website UI Screenshots
 
 ### Screen 1 – Homepage
 ![Homepage](static/screenshot1.png)
