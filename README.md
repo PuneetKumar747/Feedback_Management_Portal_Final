@@ -196,6 +196,24 @@ while True:
 
 Note: Make sure to keep your app-specific password confidential and not commit it to version control. Consider using environment variables or a secure configuration file to store sensitive information.
 
+## 🖼️ Chatbot UI Screenshots
+
+### Screen 1 – Homepage
+![Homepage](static/screenshot1.png)
+
+### Screen 2 – Homepage
+![Homepage](static/screenshot2.png)
+
+### Screen 3 – user Input
+![Selectorpage](static/screenshot3.png)
+
+### Screen 4 – To see the previous feedback
+![Saturday](static/screenshot4.png)
+
+### Screen 5 – mobile preview
+![Mobilepreview](static/screenshot5.png)
+
+
 ## Usage
 
 - Students: Log in with your Sitare email (su-*.sitare.org) to access the student portal and submit weekly feedback.
