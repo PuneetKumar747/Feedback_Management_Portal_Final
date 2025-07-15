@@ -230,6 +230,9 @@ Contributions to improve the Sitare University Feedback System are welcome. Plea
 4. Push to the branch (`git push origin feature-branch`)
 5. Create a new Pull Request
 
+## Live Demo
+!(https://students.sitare.org)
+
 ## License
 
 [MIT License](https://opensource.org/licenses/MIT)
