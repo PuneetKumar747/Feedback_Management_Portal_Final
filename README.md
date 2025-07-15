@@ -135,8 +135,8 @@ The system includes initial data setup for instructors and courses:
 insert_instructors_query = """
 INSERT INTO instructors (instructor_id, instructor_name, instructor_email)
 VALUES
-(3, 'Dr. Achal Agrawal', 'achal@sitare.org'),
-(4, 'Ms. Preeti Shukla', 'preeti@sitare.org'),
+(3, 'Dr. Achal Agrawal', 'achal453@sitare.org'),
+(4, 'Ms. Preeti Shukla', 'preeti577@sitare.org'),
 ...
 ON CONFLICT (instructor_id) DO NOTHING;
 """
